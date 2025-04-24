@@ -80,6 +80,9 @@ namespace Ocean {
         MemoryService();
         virtual ~MemoryService() = default;
 
+        AssignServiceName(MemoryService);
+        AssignServicePriority(ServicePriority::IMMEDIATE);
+
         /**
         * @brief Get's the instance of the MemoryService.
         * 
@@ -90,11 +93,11 @@ namespace Ocean {
         /**
         * @brief Initializes the MemoryService and its allocators.
         */
-        void Init();
+        virtual void Init() override;
         /**
         * @brief Shuts down the MemoryService and its allocators.
         */
-        void Shutdown();
+        virtual void Shutdown() override;
 
         /**
         * @brief Get's the system allocator of Ocean. I.e. the allocator used internally.

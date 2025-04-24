@@ -8,12 +8,12 @@
  */
 #pragma once
 
+#include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 #include "Ocean/Types/Strings.hpp"
 
-#include "Ocean/Primitives/HashMap.hpp"
-
-#include "Ocean/Core/Exceptions.hpp"
+// std
+#include <vector>
 
 namespace Ocean {
 
@@ -90,6 +90,9 @@ namespace Ocean {
 
     };  // ClassRegistry
 
+    /**
+     * @brief Base non-templated registrator to enable pointer storage.
+     */
     class BaseRegistrator {
     public:
         BaseRegistrator() = default;
@@ -132,62 +135,80 @@ namespace Ocean {
 
     };  // Registrator
 
+    struct RegistryEntryData {
+        cstring name;
+        u8 priority;
+
+        Ref<BaseRegistrator> data;
+
+    };  // RegistryEntryData
+
     /**
-     * @brief 
+     * @brief A registery of Services that have a lifetime outside of the Ocean Applicaiton.
      */
-    class StaticServiceRegistry : public ClassRegistry<UnorderedMap<cstring, Ref<BaseRegistrator>>, StaticServiceRegistry> {
+    class StaticServiceRegistry : public ClassRegistry<std::vector<RegistryEntryData>, StaticServiceRegistry> {
     public:
         /**
-         * @brief 
+         * @brief Initializes the registered services.
          */
-         static void InitializeServices();
+        static void InitializeServices();
          /**
-          * @brief 
+          * @brief Shuts down the registered services.
           */
-         static void ShutdownServices();
+        static void ShutdownServices();
 
     protected:
         /**
-         * @brief 
+         * @brief Registers a service class to the registry.
          * 
          * @tparam Service The service type to register.
          */
         template <typename Service>
         inline static void RegisterClass() {
-            if (_Classes().find(Service::Name()) != _Classes().end())
-                throw Exception(Error::DUPLICATE_DATA, "Attempting to register Service when it is already registered!");
-
-            _Classes().try_emplace(Service::Name(), MakeRef<Service>());
+            if (_Classes().empty() || _Classes().back().priority < Service::Priority())
+                _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            else if (_Classes().front().priority > Service::Priority())
+                _Classes().emplace(_Classes().begin(), RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            else {
+                for (u16 i = 1; i < _Classes().size(); i++)
+                    if (_Classes()[i].priority < Service::Priority())
+                        _Classes().emplace(_Classes().begin() + i - 1, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            }
         }
 
     };  // ServiceRegistry
 
     /**
-     * @brief 
+     * @brief A registry of Services that have a lifetime within the Ocean Application.
      */
-    class RuntimeServiceRegistry : public ClassRegistry<UnorderedMap<cstring, Ref<BaseRegistrator>>, RuntimeServiceRegistry> {
+    class RuntimeServiceRegistry : public ClassRegistry<std::vector<RegistryEntryData>, RuntimeServiceRegistry> {
     public:
         /**
-         * @brief 
+         * @brief Initializes the registered services.
          */
-         static void InitializeServices();
+        static void InitializeServices();
          /**
-          * @brief 
+          * @brief Shuts down the registered services.
           */
-         static void ShutdownServices();
+        static void ShutdownServices();
 
     protected:
         /**
-         * @brief 
+         * @brief Registers a service class to the registry.
          * 
          * @tparam Service The service type to register.
          */
         template <typename Service>
         inline static void RegisterClass() {
-            if (_Classes().find(Service::Name()) != _Classes().end())
-                throw Exception(Error::DUPLICATE_DATA, "Attempting to register Service when it is already registered!");
-
-            _Classes().try_emplace(Service::Name(), MakeRef<Service>());
+            if (_Classes().empty() || _Classes().back().priority < Service::Priority())
+                _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            else if (_Classes().front().priority > Service::Priority())
+                _Classes().emplace(_Classes().begin(), RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            else {
+                for (u16 i = 1; i < _Classes().size(); i++)
+                    if (_Classes()[i].priority < Service::Priority())
+                        _Classes().emplace(_Classes().begin() + i - 1, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            }
         }
 
     };  // ServiceRegistry

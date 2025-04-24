@@ -1,43 +1,40 @@
 #include "ServiceRegistry.hpp"
 
-#include "Ocean/Types/Strings.hpp"
+#include "Ocean/Core/Macros.hpp"
 
 #include "Ocean/Core/Logger.hpp"
-
-// std
-#include <utility>
 
 namespace Ocean {
 
     void StaticServiceRegistry::InitializeServices() {
-        for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-            oprint("|> Initializing %s\n", service.first);
+        for (const RegistryEntryData& service : _Classes()) {
+            oprint("|> Initializing %s\n", service.name);
 
-            service.second->Init();
+            service.data->Init();
         }
     }
 
     void StaticServiceRegistry::ShutdownServices() {
-        for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-            oprint("|> Shutting Down %s\n", service.first);
+        for (i16 i = _Classes().size() - 1; i >= 0; i--) {
+            oprint("|> Shutting Down %s\n", _Classes()[i].name);
 
-            service.second->Shutdown();
+            _Classes()[i].data->Shutdown();
         }
     }
 
     void RuntimeServiceRegistry::InitializeServices() {
-        for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-            oprint("|> Initializing %s", service.first);
+        for (const RegistryEntryData& service : _Classes()) {
+            oprint(CONSOLE_TEXT_CYAN("|-> Initializing %s\n"), service.name);
 
-            service.second->Init();
+            service.data->Init();
         }
     }
 
     void RuntimeServiceRegistry::ShutdownServices() {
-        for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-            oprint("|> Shutting Down %s", service.first);
+        for (i16 i = _Classes().size() - 1; i >= 0; i--) {
+            oprint(CONSOLE_TEXT_CYAN("|-> Shutting Down %s\n"), _Classes()[i].name);
 
-            service.second->Shutdown();
+            _Classes()[i].data->Shutdown();
         }
     }
 

@@ -18,6 +18,7 @@ namespace Ocean {
         virtual ~WindowService();
 
         AssignServiceName(WindowService);
+        AssignServicePriority(ServicePriority::IMMEDIATE);
 
         virtual void Init() override;
         virtual void Shutdown() override;

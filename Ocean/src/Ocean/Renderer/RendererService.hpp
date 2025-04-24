@@ -12,10 +12,20 @@
 
 namespace Ocean {
 
-    class RendererService : public Service {
+    class RendererService : public RuntimeService<RendererService> {
+    public:
+        RendererService();
+        virtual ~RendererService();
 
+        AssignServiceName(RendererService);
+        AssignServicePriority(ServicePriority::INITIAL);
 
+        virtual void Init() override;
+        virtual void Shutdown() override;
+
+    private:
+        inline static RendererService* s_Instance = nullptr;
 
     };  // RendererService
 
-}
+}   // Ocean

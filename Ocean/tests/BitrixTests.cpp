@@ -1,4 +1,4 @@
-#include <Ocean/Ocean.hpp>
+#include <Ocean/Types/Bitrix.hpp>
 
 #include "./Base/Tests.hpp"
 

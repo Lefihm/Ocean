@@ -1,12 +1,14 @@
 #include "Application.hpp"
 
+#include "Ocean/Core/Logger.hpp"
 #include "Ocean/Core/Assert.hpp"
+#include "Ocean/Core/Macros.hpp"
 
 namespace Ocean {
 
     #define FixedTimestep 0.02f
 
-    Application::Application(OC_UNUSED const ApplicationConfig& config) :
+    Application::Application(const ApplicationConfig& config) :
         m_LayerStack(),
         m_LastFrameTime(0.0f),
         m_Accumulator(0.0f),
@@ -14,26 +16,41 @@ namespace Ocean {
     {
         OASSERTM(!s_Instance, "Application already exists!");
         s_Instance = this;
+
+        oprint(CONSOLE_TEXT_GREEN("Constructing Application\n"));
+
+        RuntimeServiceRegistry::InitializeServices();
     }
 
     Application::~Application() {
+        RuntimeServiceRegistry::ShutdownServices();
+
+        oprint(CONSOLE_TEXT_GREEN("Deconstructing Applicaiton\n"));
     }
 
     void Application::Close() {
+        oprint(CONSOLE_TEXT_GREEN("|- Application Close Call\n"));
+
         this->m_Running = false;
     }
 
     void Application::PushLayer(Layer* layer) {
+        oprint(CONSOLE_TEXT_GREEN("|- Application Push Layer Call\n"));
+
         this->m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverlay(Layer* layer) {
+        oprint(CONSOLE_TEXT_GREEN("|- Application Push Overlay Call\n"));
+
         this->m_LayerStack.PushOverlay(layer);
         layer->OnAttach();
     }
 
     void Application::Run() {
+        oprint(CONSOLE_TEXT_GREEN("|- Application Run Call\n"));
+
         this->m_Running = true;
 
         // Temporary
@@ -56,10 +73,6 @@ namespace Ocean {
                 frameCount = accumulatorCounter = 0;
             }
 
-            // // if (!this->m_Window->IsMinimized()) {
-            // //     // p_Renderer->BeginFrame();
-            // // }
-
             FrameBegin();
 
             while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
@@ -74,42 +87,42 @@ namespace Ocean {
             if (true) {
                 VariableUpdate(timeStep);
 
-            //     // TODO: Interpolation
+                // TODO: Interpolation
                 Render(f32());
             }
-            // // p_Renderer->EndFrame();
-
             FrameEnd();
 
             // this->m_Window->OnUpdate();
 
             frameCount++;
 
-            if (frameCount >= 100)
+            if (frameCount >= 3)
                 Close();
         }
     }
 
-    void Application::FixedUpdate(OC_UNUSED Timestep delta) {
-
+    void Application::FixedUpdate(Timestep delta) {
+        oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
     }
-    void Application::VariableUpdate(OC_UNUSED Timestep delta) {
+    void Application::VariableUpdate(Timestep delta) {
+        oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
+
         for (Layer* layer : this->m_LayerStack)
             layer->OnUpdate(delta);
     }
     
     void Application::FrameBegin() {
-        
+        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
     }
-    void Application::Render(OC_UNUSED f32 interpolation) {
-        
+    void Application::Render(f32 interpolation) {
+        oprint(CONSOLE_TEXT_GREEN("\t|- Application Render Call\n"));
     }
     void Application::FrameEnd() {
-        
+        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameEnd Call\n"));
     }
 
     void Application::OnResize(u16 width, u16 height) {
-        // Renderer::OnWindowResize(width, height);
+        oprint(CONSOLE_TEXT_GREEN("|- Application OnResize Call\n"));
     }
 
 }    // Ocean

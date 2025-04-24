@@ -51,20 +51,20 @@ globbert(
     GROUP_PREFIX "Renderer"
 )
 
-globbert(
-    Ocean_AUDIO_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Ocean/Audio"
-    RECURSE
-    GROUP_PREFIX "Audio"
-    GLOBAL_VAR Ocean_SOURCES
-)
+# globbert(
+#     Ocean_AUDIO_FILES
+#     "${CMAKE_CURRENT_SOURCE_DIR}/src/Ocean/Audio"
+#     RECURSE
+#     GROUP_PREFIX "Audio"
+#     GLOBAL_VAR Ocean_SOURCES
+# )
 
 # Vendor Files (Non-Libraries)
 globbert(
     tlsf_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/tlsf"
-    GROUP_PREFIX "tlsf"
     GLOBAL_VAR Ocean_VENDOR_SOURCES
+    GROUP_PREFIX "tlsf"
 )
 
 globbert(
@@ -72,13 +72,6 @@ globbert(
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb"
     GLOBAL_VAR Ocean_VENDOR_SOURCES
     GROUP_PREFIX "stb"
-)
-
-globbert(
-    cr_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/cr"
-    GLOBAL_VAR Ocean_VENDOR_SOURCES
-    GROUP_PREFIX "cr"
 )
 
 add_library(

@@ -5,6 +5,8 @@
 
 #include "Ocean/Core/Application.hpp"
 
+#include "Ocean/Core/Service/ServiceRegistry.hpp"
+
 // std
 #include <exception>
 #include <iostream>
@@ -12,18 +14,22 @@
 extern Ocean::Application* Ocean::CreateApplication(int argc, char** argv);
 
 int main(int argc, char** argv) {
-	Ocean::Application* app = Ocean::CreateApplication(argc, argv);
+    Ocean::StaticServiceRegistry::InitializeServices();
 
-	try {
-		app->Run();
-	}
-	catch (const Ocean::Exception& e) {
-		std::cerr << "Ocean Exception: " << e.what() << std::endl;
-	}
-	catch (const std::exception& e) {
-		std::cerr << "Exception: " << e.what() << std::endl;
-	}
+    Ocean::Application* app = Ocean::CreateApplication(argc, argv);
 
-	delete app;
-	return EXIT_SUCCESS;
+    try {
+        app->Run();
+    }
+    catch (const Ocean::Exception& e) {
+        std::cerr << "Ocean Exception: " << e.what() << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+
+    delete app;
+    Ocean::StaticServiceRegistry::ShutdownServices();
+
+    return EXIT_SUCCESS;
 }

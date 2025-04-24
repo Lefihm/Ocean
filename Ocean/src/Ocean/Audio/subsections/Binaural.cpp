@@ -1,6 +1,6 @@
 #include "Binaural.hpp"
 #include "HRTF.hpp"
-#include "Ocean/Primitives/Exceptions.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 #include <phonon.h>
 

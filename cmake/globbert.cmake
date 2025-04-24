@@ -9,13 +9,13 @@ function(globbert OUTPUT_VAR DIR)
     # Glob the files recursively or in single directory
     if(ARG_RECURSE)
 
-        file(GLOB_RECURSE GLOBBED_HEADERS "${DIR}/*.hpp")
-        file(GLOB_RECURSE GLOBBED_SOURCES "${DIR}/*.cpp")
+        file(GLOB_RECURSE GLOBBED_HEADERS "${DIR}/*.hpp" "${DIR}/*.h")
+        file(GLOB_RECURSE GLOBBED_SOURCES "${DIR}/*.cpp" "${DIR}/*.c")
 
     else()
 
-        file(GLOB GLOBBED_HEADERS "${DIR}/*.hpp")
-        file(GLOB GLOBBED_SOURCES "${DIR}/*.cpp")
+        file(GLOB GLOBBED_HEADERS "${DIR}/*.hpp" "${DIR}/*.h")
+        file(GLOB GLOBBED_SOURCES "${DIR}/*.cpp" "${DIR}/*.c")
 
     endif()
 

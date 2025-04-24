@@ -4,7 +4,7 @@
 #include <phonon.h>
 #include "HRTF.hpp"
 #include "../steamaudio_dataholding.hpp"
-#include "Ocean/Primitives/Exceptions.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 
 namespace sonar{
     //useful for ambient sounds, or spatialized music.

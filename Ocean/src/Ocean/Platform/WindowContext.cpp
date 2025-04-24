@@ -1,9 +1,9 @@
 #include "WindowContext.hpp"
 
-#include "Ocean/Primitives/Exceptions.hpp"
 #include "Ocean/Types/Integers.hpp"
 
-#include "Ocean/Primitives/Log.hpp"
+#include "Ocean/Core/Logger.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 
 // libs
 #define GLFW_INCLUDE_NONE

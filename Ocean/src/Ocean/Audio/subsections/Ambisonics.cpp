@@ -1,6 +1,6 @@
 #pragma once
 #include "Ambisonics.hpp"
-#include "Ocean/Primitives/Exceptions.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 #include <cmath>
 #include <cstdint>
 #include <phonon.h>

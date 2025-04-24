@@ -4,8 +4,6 @@
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Bix.hpp"
 
-#include "Ocean/Primitives/Macros.hpp"
-
 // std
 #include <ostream>
 
@@ -16,7 +14,7 @@ class Bitrix2DAccess;
  */
 class  Bitrix2D {
 private:
-    OC_STATIC_EXPR u8 k_BixSize = sizeof(Bix8) * 8;
+    static constexpr u8 k_BixSize = sizeof(Bix8) * 8;
 
 public:
     Bitrix2D();

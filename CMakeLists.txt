@@ -6,6 +6,9 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(globbert)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 string(COMPARE EQUAL ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} Ocean_MAIN_PROJECT)
@@ -13,7 +16,6 @@ string(COMPARE EQUAL ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} Ocean_MAIN_
 option(CMAKE_VERBOSE_MAKEFILE "Use CMake verbose make file." ON)
 
 option(Ocean_BUILD_DLL "Build Ocean as a dynamic library." ON)
-option(Ocean_BUILD_DOCS "Generate Ocean Engine documentation target." ON)
 option(Ocean_BUILD_TESTS "Build Ocean tests." Ocean_INTERNAL_BUILD_TESTS)
 
 if (NOT DEFINED Ocean_INTERNAL_BUILD_TESTS AND Ocean_MAIN_PROJECT)
@@ -235,15 +237,6 @@ if (Ocean_BUILD_TESTS)
     add_subdirectory(Ocean/tests)
 
 endif (Ocean_BUILD_TESTS)
-
-if (Ocean_BUILD_DOCS)
-    
-    string(TIMESTAMP time "%M:%S")
-    add_subdirectory(Docs)
-    message(STATUS "Doxygen Setup Started (${time})...")
-    message(STATUS)
-
-endif (Ocean_BUILD_DOCS)
 
 string(TIMESTAMP time "%M:%S")
 message(STATUS "Sandbox Starting (${time})...")

@@ -4,14 +4,11 @@
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Strings.hpp"
 #include "Ocean/Types/Timestep.hpp"
-#include "Ocean/Types/SmartPtrs.hpp"
 
-#include "Ocean/Primitives/Macros.hpp"
-#include "Ocean/Primitives/Memory.hpp"
+#include "Ocean/Core/Macros.hpp"
+#include "Ocean/Core/Memory.hpp"
 
 #include "Ocean/Core/Layers/LayerStack.hpp"
-
-#include "Ocean/Platform/Window.hpp"
 
 extern int main(int argc, char** argv);
 
@@ -93,7 +90,7 @@ namespace Ocean {
 		 * 
 		 * @return Application* 
 		 */
-		OC_INLINE OC_STATIC Application* Get() { return s_Instance; }
+		inline static Application* Get() { return s_Instance; }
 
 		/**
 		 * @brief A new operator overload within the scope of the Application class.
@@ -117,8 +114,7 @@ namespace Ocean {
 	protected:
 		friend int ::main(int argc, char** argv);
 
-		/* --- */
-
+	protected:
 		/**
 		 * @brief The primary runtime of the application.
 		 */
@@ -157,12 +153,9 @@ namespace Ocean {
 		 */
 		void FrameEnd();
 
-		/* --- */
-
+	protected:
 		/** @brief The instance of the Application, makes sure there is only one instance running. */
-		OC_STATIC_INLINE Application* s_Instance = nullptr;
-		/** @brief The main window of the application. */
-		Scope<Window> m_Window;
+		inline static Application* s_Instance = nullptr;
 
 		/** @brief The LayerStack of the application. */
 		LayerStack m_LayerStack;

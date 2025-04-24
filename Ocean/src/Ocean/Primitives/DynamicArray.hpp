@@ -3,10 +3,10 @@
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Iterator.hpp"
 
-#include "Ocean/Primitives/Memory.hpp"
-#include "Ocean/Primitives/Exceptions.hpp"
-
 #include "Ocean/Primitives/Structures/Container.hpp"
+
+#include "Ocean/Core/Memory.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 
 // std
 #include <initializer_list>

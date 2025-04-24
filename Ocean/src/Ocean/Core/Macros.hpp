@@ -1,6 +1,12 @@
+/**
+ * @file Macros.hpp
+ * @brief 
+ * 
+ * @author Evan F.
+ * 
+ * @copyright Copyright 2025 Lefihm Interactive
+ */
 #pragma once
-
-#include "Ocean/Platform/PlatformBase.hpp"
 
 #include <signal.h>
 
@@ -17,33 +23,10 @@
 /** @brief Marks a function as noexcept with the given expression. */
 #define OC_NO_EXCEPT_E(expression)               noexcept(expression)
 
-/** @brief Marks a function as inline. */
-#define OC_INLINE                                inline
 
-#ifdef OC_PLATFORM_WINDOWS
 
-    /** @brief Marks a function to force inline. (WIN32 implementation). */
-    #define OC_FINLINE                               __forceinline
-
-#elif defined(OC_PLATFORM_LINUX)
-
-    /** @brief Marks a function to force inline. (Linux implementation). */
-    #define OC_FINLINE                               __attribute__((always_inline))
-
-#endif
-
-/** @brief Marks a function as an inline constexpr (const expression). */
-#define OC_INLINE_EXPR                           inline constexpr
-
-/** @brief Marks a function as static. */
-#define OC_STATIC                                static
-/** @brief Marks a function as static and inline. */
-#define OC_STATIC_INLINE                         static inline
-/** @brief Marks a function as static and constexpr (const expression). */
-#define OC_STATIC_EXPR                           static constexpr
-
-/** @brief Marks a function as extern. E.g. an external definition. */
-#define OC_EXTERN                                extern
+/** @brief Marks a function to force inline. */
+#define OC_FINLINE                               inline __attribute__((always_inline))
 
 
 

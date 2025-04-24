@@ -65,6 +65,11 @@ namespace Ocean{
         /** @brief Occurs when the window handle is not valid. */
         BAD_WINDOW_HANDLE,
 
+        // Data Errors
+
+        /** @brief Occurs when duplicate data is made when unique data is expected. */
+        DUPLICATE_DATA
+
     } Error;
 
     /**

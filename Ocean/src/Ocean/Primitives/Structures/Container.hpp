@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Ocean/Types/Bool.hpp"
-#include "Ocean/Types/Strings.hpp"
-
-#include "Ocean/Primitives/Macros.hpp"
 
 // std
 #include <ostream>

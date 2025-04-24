@@ -1,10 +1,18 @@
+/**
+ * @file Layer.hpp
+ * @brief 
+ * 
+ * @author Evan F.
+ * 
+ * @copyright Copyright 2025 Lefihm Interactive
+ */
 #pragma once
 
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Strings.hpp"
 #include "Ocean/Types/Timestep.hpp"
 
-#include "Ocean/Primitives/Macros.hpp"
+#include "Ocean/Core/Macros.hpp"
 
 namespace Ocean {
 
@@ -22,12 +30,12 @@ namespace Ocean {
         virtual ~Layer() = default;
 
         /** @brief Occurs when the layer is attached to a LayerStack. */
-        OC_INLINE virtual void OnAttach() { }
+        inline virtual void OnAttach() { }
         /** @brief Occurs when the layer is dettached from a LayerStack. */
-        OC_INLINE virtual void OnDetach() { }
+        inline virtual void OnDetach() { }
 
         /** @brief Occurs when the layer is updated by the Application. */
-        OC_INLINE virtual void OnUpdate(OC_UNUSED Timestep ts) { }
+        inline virtual void OnUpdate(OC_UNUSED Timestep ts) { }
 
         /** @brief Occurs when there is an event submitted to the layer. */
         // virtual void OnEvent(Event& e) { }
@@ -37,13 +45,13 @@ namespace Ocean {
          * 
          * @return b8 
          */
-        OC_INLINE b8 IsEnabled() const { return this->m_Enabled; }
+        inline b8 IsEnabled() const { return this->m_Enabled; }
         /**
          * @brief Sets m_Enabled to the given value.
          * 
          * @param enabled True to enable the layer, false to disable the layer.
          */
-        OC_INLINE void SetEnabled(b8 enabled) { this->m_Enabled = enabled; }
+        inline void SetEnabled(b8 enabled) { this->m_Enabled = enabled; }
 
     #ifdef OC_DEBUG
 
@@ -52,7 +60,7 @@ namespace Ocean {
          * 
          * @return const string&
          */
-        OC_INLINE const String& GetName() const { return this->m_DebugName; }
+        inline const String& GetName() const { return this->m_DebugName; }
 
     #endif
 
@@ -62,9 +70,9 @@ namespace Ocean {
 
     #ifdef OC_DEBUG
 
-    /** @brief A name for use in debug builds / engine debugging. */
+        /** @brief A name for use in debug builds / engine debugging. */
         String m_DebugName;
-        
+
     #endif
 
     };  // Layer

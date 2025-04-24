@@ -1,7 +1,15 @@
+/**
+ * @file Assert.hpp
+ * @brief 
+ * 
+ * @author Evan F.
+ * 
+ * @copyright Copyright 2025 Lefihm Interactive
+ */
 #pragma once
 
-#include "Ocean/Primitives/Macros.hpp"
-#include "Ocean/Primitives/Log.hpp"
+#include "Ocean/Core/Macros.hpp"
+#include "Ocean/Core/Logger.hpp"
 
 /** @brief Assert given that the condition is NOT true. */
 #define OASSERT(condition) if (!(condition)) { oprintret(OCEAN_FUNCTIONLINE("FALSE")); OCEAN_DEBUG_BREAK; }

@@ -45,26 +45,26 @@ namespace Ocean {
          * 
          * @return DynamicArray<Layer*>::Iterator 
          */
-        OC_INLINE DynamicArray<Layer*>::Iterator begin() { return m_Layers.Begin(); }
+        inline DynamicArray<Layer*>::Iterator begin() { return m_Layers.Begin(); }
         /**
          * @brief Get's the first layer as a const-iterator.
          * 
          * @return DynamicArray<Layer*>::ConstIterator 
          */
-         OC_INLINE DynamicArray<Layer*>::ConstIterator begin() const { return m_Layers.Begin(); }
+        inline DynamicArray<Layer*>::ConstIterator begin() const { return m_Layers.Begin(); }
 
         /**
          * @brief Get's the last layer as an iterator.
          * 
          * @return DynamicArray<Layer*>::Iterator 
          */
-         OC_INLINE DynamicArray<Layer*>::Iterator end() { return m_Layers.End(); }
+        inline DynamicArray<Layer*>::Iterator end() { return m_Layers.End(); }
         /**
          * @brief Get's the last layer as a const-iterator.
          * 
          * @return DynamicArray<Layer*>::ConstIterator 
          */
-         OC_INLINE DynamicArray<Layer*>::ConstIterator end() const { return m_Layers.End(); }
+        inline DynamicArray<Layer*>::ConstIterator end() const { return m_Layers.End(); }
 
     private:
         /** @brief An array of Layer pointers representing a layerstack. */

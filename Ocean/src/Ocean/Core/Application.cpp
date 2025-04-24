@@ -1,17 +1,12 @@
 #include "Application.hpp"
 
 #include "Ocean/Primitives/Assert.hpp"
-#include "Ocean/Primitives/Log.hpp"
-#include "Ocean/Primitives/Time.hpp"
-
-#include "Ocean/Renderer/Renderer.hpp"
 
 namespace Ocean {
 
 	#define FixedTimestep 0.02f
 
 	Application::Application(OC_UNUSED const ApplicationConfig& config) :
-		m_Window(),
 		m_LayerStack(),
 		m_LastFrameTime(0.0f),
 		m_Accumulator(0.0f),
@@ -21,15 +16,9 @@ namespace Ocean {
 		
 		s_Instance, "Application already exists!");
 		s_Instance = this;
-
-		this->m_Window = Window::Create(config.width, config.height, config.name);
-		this->m_Window->Init();
-
-		Renderer::Init();
 	}
 
 	Application::~Application() {
-		Renderer::Shutdown();
 	}
 
 	void Application::Close() {
@@ -61,51 +50,51 @@ namespace Ocean {
 		u32 frameCount = 0;
 
 		while (this->m_Running) {
-			Timestep t(oTimeNow());
-			Timestep timeStep(t - this->m_LastFrameTime);
-			this->m_LastFrameTime = t;
+			// Timestep t(oTimeNow());
+			// Timestep timeStep(t - this->m_LastFrameTime);
+			// this->m_LastFrameTime = t;
 
-			this->m_Accumulator += timeStep;
-			time += timeStep;
+			// this->m_Accumulator += timeStep;
+			// time += timeStep;
 
-			if (time.GetSeconds() >= 5.0f ) {
-				time -= 5.0f;
-				oprint("Frames per 5 seconds: %i (%f fps)\n", frameCount, frameCount / 5.0f);
-				oprint("Fixed Updates per 5 seconds: %i (%f ups)\n", accumulatorCounter, accumulatorCounter / 5.0f);
-				frameCount = accumulatorCounter = 0;
-			}
-
-			// if (!this->m_Window->IsMinimized()) {
-			// 	// p_Renderer->BeginFrame();
+			// if (time.GetSeconds() >= 5.0f ) {
+			// 	time -= 5.0f;
+			// 	oprint("Frames per 5 seconds: %i (%f fps)\n", frameCount, frameCount / 5.0f);
+			// 	oprint("Fixed Updates per 5 seconds: %i (%f ups)\n", accumulatorCounter, accumulatorCounter / 5.0f);
+			// 	frameCount = accumulatorCounter = 0;
 			// }
 
-			FrameBegin();
+			// // if (!this->m_Window->IsMinimized()) {
+			// // 	// p_Renderer->BeginFrame();
+			// // }
 
-			while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
-				// TODO: Interpolation (For Physics Engine and Renderer)
-				FixedUpdate(FixedTimestep);
+			// FrameBegin();
 
-				accumulatorCounter++;
+			// while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
+			// 	// TODO: Interpolation (For Physics Engine and Renderer)
+			// 	FixedUpdate(FixedTimestep);
 
-				this->m_Accumulator -= FixedTimestep;
-			}
+			// 	accumulatorCounter++;
 
-			if (!this->m_Window->IsMinimized()) {
-				VariableUpdate(timeStep);
+			// 	this->m_Accumulator -= FixedTimestep;
+			// }
 
-				// TODO: Interpolation
-				Render(f32());
-			}
-			// p_Renderer->EndFrame();
+			// if (!this->m_Window->IsMinimized()) {
+			// 	VariableUpdate(timeStep);
 
-			FrameEnd();
+			// 	// TODO: Interpolation
+			// 	Render(f32());
+			// }
+			// // p_Renderer->EndFrame();
 
-			this->m_Window->OnUpdate();
+			// FrameEnd();
 
-			frameCount++;
+			// this->m_Window->OnUpdate();
 
-			if (this->m_Window->HasRequestedExit())
-				Close();
+			// frameCount++;
+
+			// if (this->m_Window->HasRequestedExit())
+			// 	Close();
 		}
 	}
 
@@ -132,7 +121,7 @@ namespace Ocean {
 	}
 
 	void Application::OnResize(u16 width, u16 height) {
-		Renderer::OnWindowResize(width, height);
+		// Renderer::OnWindowResize(width, height);
 	}
 
 }	// Ocean

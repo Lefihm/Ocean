@@ -1,41 +1,19 @@
-#include "Memory.hpp"
+#include "MemoryService.hpp"
 
-#include "Ocean/Primitives/Assert.hpp"
+#include "Ocean/Core/Assert.hpp"
 
 // libs
 #include <tlsf.h>
 
 // std
 #include <stdlib.h>
-#include <cstdint>
 #include <cstring>
 
 // Memory Methods
 
-// The following offset and adjustment implementations are adapted from:
-// https://screwjankgames.github.io/engine%20programming/2020/09/24/writing-your-own-memory-allocators.html
-
-uintptr_t oAlignmentOffset(sizet alignOf, const void* const ptr) {
-	// Note: m % n & = m & (n - 1) if n is a power of two.
-	// Alignment requirements are always a power of two.
-
-	return reinterpret_cast<uintptr_t>(ptr) & (alignOf - 1);
-}
-
-uintptr_t oAlignmentAdjustment(sizet alignOf, const void* const ptr) {
-	auto offset = oAlignmentOffset(alignOf, ptr);
-
-	// If the address is already aligned we don't need any adjustment.
-
-	if (offset == 0)
-		return 0;
-
-	return alignOf - offset;
-}
-
 // Walker Methods
 
-#ifdef OC_DETAILED_ALLOCATIONS
+#ifdef OC_VERBOSE
 	static void ExitWalker(void* ptr, sizet size, i32 used, OC_UNUSED void* user) {
 		if (used) {
 			oprint("Found active allocation %p, %llu\n", ptr, size);
@@ -46,7 +24,7 @@ uintptr_t oAlignmentAdjustment(sizet alignOf, const void* const ptr) {
 
 // Heap Allocator
 
-#ifdef OC_DETAILED_ALLOCATIONS
+#ifdef OC_VERBOSE
 
 	static MemoryStats s_Stats{ 0, 0, 0, 0 };
 
@@ -356,19 +334,14 @@ void MallocAllocator::Deallocate(void* ptr) {
 
 static sizet s_Size = omega(32) + tlsf_size() + 8;
 
-MemoryService& MemoryService::Instance() {
-	if (!s_Instance)
-		s_Instance = new MemoryService();
-
-	return *s_Instance;
+MemoryService* MemoryService::Instance() {
+	return s_Instance;
 }
 
-void MemoryService::Init(MemoryServiceConfig* config) {
-	m_SystemAllocator.Init(config ? config->MaxDynamicSize : s_Size);
+void MemoryService::Init() {
+	m_SystemAllocator.Init(s_Size);
 }
 
 void MemoryService::Shutdown() {
-	Instance().m_SystemAllocator.Shutdown();
-
-	delete &Instance();
+	Instance()->m_SystemAllocator.Shutdown();
 }

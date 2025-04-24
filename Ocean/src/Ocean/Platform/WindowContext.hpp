@@ -1,15 +1,12 @@
-#pragma once
-
 /**
- * @file WindowContext.hpp
- * @author Evan F.
+ * @file Context.hpp
  * @brief 
  * 
- * @copyright Copyright (c) 2025
+ * @author Evan F.
  * 
+ * @copyright Copyright 2025 Lefihm Interactive
  */
-
-#include "Ocean/Primitives/Macros.hpp"
+#pragma once
 
 namespace Ocean {
 
@@ -22,6 +19,7 @@ namespace Ocean {
          * @brief Ocean's window platform ID.
          */
         typedef enum PlatformID {
+            /** @brief Default NULL value. */
             NONE = 0,
             /** @brief Win32 based windows. */
             WINDOWS,
@@ -38,18 +36,18 @@ namespace Ocean {
         /**
          * @brief Initializes the window handler. 
          */
-        OC_STATIC void Init();
+        static void Init();
         /**
          * @brief Shut's down the window handler.
          */
-        OC_STATIC void Shutdown();
+         static void Shutdown();
 
         /**
          * @brief Get's a PlatformID from the window handler.
          * 
          * @return PlatformID
          */
-        OC_STATIC PlatformID GetPlatformID();
+        static PlatformID GetPlatformID();
 
     };  // WindowContext
 

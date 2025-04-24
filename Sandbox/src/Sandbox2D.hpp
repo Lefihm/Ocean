@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Ocean/Ocean.hpp>
+#include <Ocean/Core/Layers/Layer.hpp>
 
 class Sandbox2D : public Ocean::Layer {
 public:
@@ -15,6 +15,5 @@ public:
 	// virtual void OnEvent(Ocean::Event& e) override;
 
 private:
-    Ocean::OrthoCamera m_Camera;
 
 };  // Sandbox2D

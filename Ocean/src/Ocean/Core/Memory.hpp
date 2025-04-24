@@ -8,10 +8,12 @@
  */
 #pragma once
 
+#include "Ocean/Core/Service/MemoryService.hpp"
+
 /** @brief Macro to get the system allocator from the MemoryService. */
-#define oSystemAllocator      MemoryService::Instance()->SystemAllocator()
+#define oSystemAllocator      Ocean::MemoryService::Instance()->SystemAllocator()
 /** @brief Macro to get the unmanaged allocator from the MemoryService. */
-#define oUnmanagedAllocator   MemoryService::Instance()->UnmanagedAllocator()
+#define oUnmanagedAllocator   Ocean::MemoryService::Instance()->UnmanagedAllocator()
 
 #if OC_VERBOSE_MEMORY
 

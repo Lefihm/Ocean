@@ -1,3 +1,11 @@
+/**
+ * @file MemoryService.hpp
+ * @brief 
+ * 
+ * @author Evan F.
+ * 
+ * @copyright Copyright 2025 Lefihm Interactive
+ */
 #pragma once
 
 #include "Ocean/Types/Integers.hpp"

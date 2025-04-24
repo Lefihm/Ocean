@@ -2,8 +2,6 @@
 
 #include "Ocean/Types/FloatingPoints.hpp"
 
-#include "Ocean/Primitives/Macros.hpp"
-
 #if defined(_MSC_VER)
 
 	#define WIN32_LEAN_AND_MEAN 1
@@ -43,7 +41,7 @@ void oTimeServiceShutdown() {
 // Computes (value*numer) / denom without overflow, as long as both
 // (numer * denom) and the overall result fit into i64 (which is the case
 // for our time conversions).
-OC_UNUSED static i64 int64_mul_div(i64 value, i64 numer, i64 denom) {
+static i64 int64_mul_div(i64 value, i64 numer, i64 denom) {
 	const i64 q = value / denom;
 	const i64 r = value % denom;
 	// Decompose value as (value / denom * denom + value % denom),

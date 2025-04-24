@@ -11,11 +11,7 @@ namespace Ocean {
 
     void StaticServiceRegistry::InitializeServices() {
         for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-        #ifdef OC_DEBUG
-
-            oprint("|> Initializing %s", service.first);
-
-        #endif
+            oprint("|> Initializing %s\n", service.first);
 
             service.second->Init();
         }
@@ -23,11 +19,7 @@ namespace Ocean {
 
     void StaticServiceRegistry::ShutdownServices() {
         for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-        #ifdef OC_DEBUG
-
-            oprint("|> Shutting Down %s", service.first);
-
-        #endif
+            oprint("|> Shutting Down %s\n", service.first);
 
             service.second->Shutdown();
         }
@@ -35,11 +27,7 @@ namespace Ocean {
 
     void RuntimeServiceRegistry::InitializeServices() {
         for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-        #ifdef OC_DEBUG
-
             oprint("|> Initializing %s", service.first);
-
-        #endif
 
             service.second->Init();
         }
@@ -47,11 +35,7 @@ namespace Ocean {
 
     void RuntimeServiceRegistry::ShutdownServices() {
         for (std::pair<cstring, Ref<BaseRegistrator>> service : _Classes()) {
-        #ifdef OC_DEBUG
-
             oprint("|> Shutting Down %s", service.first);
-
-        #endif
 
             service.second->Shutdown();
         }

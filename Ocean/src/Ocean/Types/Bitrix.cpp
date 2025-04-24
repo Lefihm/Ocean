@@ -3,7 +3,7 @@
 #include "Ocean/Types/Bix.hpp"
 #include "Ocean/Types/Integers.hpp"
 
-#include "Ocean/Primitives/Memory.hpp"
+#include "Ocean/Core/Memory.hpp"
 
 // std
 #include <cstring>

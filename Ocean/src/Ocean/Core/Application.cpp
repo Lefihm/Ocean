@@ -1,127 +1,115 @@
 #include "Application.hpp"
 
-#include "Ocean/Primitives/Assert.hpp"
+#include "Ocean/Core/Assert.hpp"
 
 namespace Ocean {
 
-	#define FixedTimestep 0.02f
+    #define FixedTimestep 0.02f
 
-	Application::Application(OC_UNUSED const ApplicationConfig& config) :
-		m_LayerStack(),
-		m_LastFrameTime(0.0f),
-		m_Accumulator(0.0f),
-		m_Running(false)
-	{
-		OASSERTM(!
-		
-		s_Instance, "Application already exists!");
-		s_Instance = this;
-	}
+    Application::Application(OC_UNUSED const ApplicationConfig& config) :
+        m_LayerStack(),
+        m_LastFrameTime(0.0f),
+        m_Accumulator(0.0f),
+        m_Running(false)
+    {
+        OASSERTM(!s_Instance, "Application already exists!");
+        s_Instance = this;
+    }
 
-	Application::~Application() {
-	}
+    Application::~Application() {
+    }
 
-	void Application::Close() {
-		this->m_Running = false;
-	}
+    void Application::Close() {
+        this->m_Running = false;
+    }
 
-	void Application::PushLayer(Layer* layer) {
-		this->m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
-	}
+    void Application::PushLayer(Layer* layer) {
+        this->m_LayerStack.PushLayer(layer);
+        layer->OnAttach();
+    }
 
-	void Application::PushOverlay(Layer* layer) {
-		this->m_LayerStack.PushOverlay(layer);
-		layer->OnAttach();
-	}
+    void Application::PushOverlay(Layer* layer) {
+        this->m_LayerStack.PushOverlay(layer);
+        layer->OnAttach();
+    }
 
-	void Application::Run() {
-	#ifdef OC_DEBUG
+    void Application::Run() {
+        this->m_Running = true;
 
-		TestRuntime();
+        // Temporary
+        Timestep time(0.0f);
+        u32 accumulatorCounter = 0;
+        u32 frameCount = 0;
 
-	#endif
+        while (this->m_Running) {
+            Timestep t(oTimeNow());
+            Timestep timeStep(t - this->m_LastFrameTime);
+            this->m_LastFrameTime = t;
 
-		this->m_Running = true;
+            this->m_Accumulator += timeStep;
+            time += timeStep;
 
-		// Temporary
-		Timestep time(0.0f);
-		u32 accumulatorCounter = 0;
-		u32 frameCount = 0;
+            if (time.GetSeconds() >= 5.0f ) {
+                time -= 5.0f;
+                oprint("Frames per 5 seconds: %i (%f fps)\n", frameCount, frameCount / 5.0f);
+                oprint("Fixed Updates per 5 seconds: %i (%f ups)\n", accumulatorCounter, accumulatorCounter / 5.0f);
+                frameCount = accumulatorCounter = 0;
+            }
 
-		while (this->m_Running) {
-			// Timestep t(oTimeNow());
-			// Timestep timeStep(t - this->m_LastFrameTime);
-			// this->m_LastFrameTime = t;
+            // // if (!this->m_Window->IsMinimized()) {
+            // //     // p_Renderer->BeginFrame();
+            // // }
 
-			// this->m_Accumulator += timeStep;
-			// time += timeStep;
+            FrameBegin();
 
-			// if (time.GetSeconds() >= 5.0f ) {
-			// 	time -= 5.0f;
-			// 	oprint("Frames per 5 seconds: %i (%f fps)\n", frameCount, frameCount / 5.0f);
-			// 	oprint("Fixed Updates per 5 seconds: %i (%f ups)\n", accumulatorCounter, accumulatorCounter / 5.0f);
-			// 	frameCount = accumulatorCounter = 0;
-			// }
+            while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
+                // TODO: Interpolation (For Physics Engine and Renderer)
+                FixedUpdate(FixedTimestep);
 
-			// // if (!this->m_Window->IsMinimized()) {
-			// // 	// p_Renderer->BeginFrame();
-			// // }
+                accumulatorCounter++;
 
-			// FrameBegin();
+                this->m_Accumulator -= FixedTimestep;
+            }
 
-			// while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
-			// 	// TODO: Interpolation (For Physics Engine and Renderer)
-			// 	FixedUpdate(FixedTimestep);
+            if (true) {
+                VariableUpdate(timeStep);
 
-			// 	accumulatorCounter++;
+            //     // TODO: Interpolation
+                Render(f32());
+            }
+            // // p_Renderer->EndFrame();
 
-			// 	this->m_Accumulator -= FixedTimestep;
-			// }
+            FrameEnd();
 
-			// if (!this->m_Window->IsMinimized()) {
-			// 	VariableUpdate(timeStep);
+            // this->m_Window->OnUpdate();
 
-			// 	// TODO: Interpolation
-			// 	Render(f32());
-			// }
-			// // p_Renderer->EndFrame();
+            frameCount++;
 
-			// FrameEnd();
+            if (frameCount >= 100)
+                Close();
+        }
+    }
 
-			// this->m_Window->OnUpdate();
+    void Application::FixedUpdate(OC_UNUSED Timestep delta) {
 
-			// frameCount++;
+    }
+    void Application::VariableUpdate(OC_UNUSED Timestep delta) {
+        for (Layer* layer : this->m_LayerStack)
+            layer->OnUpdate(delta);
+    }
+    
+    void Application::FrameBegin() {
+        
+    }
+    void Application::Render(OC_UNUSED f32 interpolation) {
+        
+    }
+    void Application::FrameEnd() {
+        
+    }
 
-			// if (this->m_Window->HasRequestedExit())
-			// 	Close();
-		}
-	}
+    void Application::OnResize(u16 width, u16 height) {
+        // Renderer::OnWindowResize(width, height);
+    }
 
-	void Application::TestRuntime() {
-
-	}
-
-	void Application::FixedUpdate(OC_UNUSED Timestep delta) {
-
-	}
-	void Application::VariableUpdate(OC_UNUSED Timestep delta) {
-		for (Layer* layer : this->m_LayerStack)
-			layer->OnUpdate(delta);
-	}
-	
-	void Application::FrameBegin() {
-		
-	}
-	void Application::Render(OC_UNUSED f32 interpolation) {
-		
-	}
-	void Application::FrameEnd() {
-		
-	}
-
-	void Application::OnResize(u16 width, u16 height) {
-		// Renderer::OnWindowResize(width, height);
-	}
-
-}	// Ocean
+}    // Ocean

@@ -3,10 +3,9 @@
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Iterator.hpp"
-#include "Ocean/Types/Strings.hpp"
 
-#include "Ocean/Primitives/Memory.hpp"
-#include "Ocean/Primitives/Exceptions.hpp"
+#include "Ocean/Core/Memory.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 
 #include "Ocean/Primitives/Structures/Container.hpp"
 

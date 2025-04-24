@@ -1,6 +1,7 @@
 #include "Sandbox2D.hpp"
 
 #include <Ocean/Core/EntryPoint.hpp>
+#include <Ocean/Core/Logger.hpp>
 
 class Sandbox : public Ocean::Application {
 public:

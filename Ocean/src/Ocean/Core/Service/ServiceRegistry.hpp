@@ -136,6 +136,16 @@ namespace Ocean {
      * @brief 
      */
     class StaticServiceRegistry : public ClassRegistry<UnorderedMap<cstring, Ref<BaseRegistrator>>, StaticServiceRegistry> {
+    public:
+        /**
+         * @brief 
+         */
+         static void InitializeServices();
+         /**
+          * @brief 
+          */
+         static void ShutdownServices();
+
     protected:
         /**
          * @brief 
@@ -149,15 +159,6 @@ namespace Ocean {
 
             _Classes().try_emplace(Service::Name(), MakeRef<Service>());
         }
-
-        /**
-         * @brief 
-         */
-        static void InitializeServices();
-        /**
-         * @brief 
-         */
-        static void ShutdownServices();
 
     };  // ServiceRegistry
 
@@ -165,6 +166,16 @@ namespace Ocean {
      * @brief 
      */
     class RuntimeServiceRegistry : public ClassRegistry<UnorderedMap<cstring, Ref<BaseRegistrator>>, RuntimeServiceRegistry> {
+    public:
+        /**
+         * @brief 
+         */
+         static void InitializeServices();
+         /**
+          * @brief 
+          */
+         static void ShutdownServices();
+
     protected:
         /**
          * @brief 
@@ -178,15 +189,6 @@ namespace Ocean {
 
             _Classes().try_emplace(Service::Name(), MakeRef<Service>());
         }
-
-        /**
-         * @brief 
-         */
-        static void InitializeServices();
-        /**
-         * @brief 
-         */
-        static void ShutdownServices();
 
     };  // ServiceRegistry
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Ocean/Primitives/Exceptions.hpp"
-#include "Ocean/Primitives/Memory.hpp"
+#include "Ocean/Core/Exceptions.hpp"
+#include "Ocean/Core/Memory.hpp"
 
 #include "Ocean/Primitives/Structures/List.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "Ocean/Primitives/Exceptions.hpp"
-#include "Ocean/Primitives/Macros.hpp"
+#include "Ocean/Core/Exceptions.hpp"
+#include "Ocean/Core/Macros.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 #include "audio.hpp"
 #include <phonon.h>
@@ -18,11 +18,11 @@ namespace sonar{
     struct global_audio_context{
         static sonar::steamaudio* audio;
         //in case i need to keep track of this stuff.
-        OC_STATIC_INLINE std::unordered_map<const char*, Ref<IPLAudioBuffer>> buffers;
-        OC_STATIC_INLINE std::unordered_map<const char*, Ref<IPLAudioBuffer>> inbuffers;
-        OC_STATIC_INLINE std::unordered_map<const char*, Ref<IPLAudioBuffer>> outbuffer;
+        inline static std::unordered_map<const char*, Ref<IPLAudioBuffer>> buffers;
+        inline static std::unordered_map<const char*, Ref<IPLAudioBuffer>> inbuffers;
+        inline static std::unordered_map<const char*, Ref<IPLAudioBuffer>> outbuffer;
         
-        OC_STATIC_INLINE std::unordered_map<const char*, Ref<IPLAudioBuffer>> tmpbuffer;
+        inline static std::unordered_map<const char*, Ref<IPLAudioBuffer>> tmpbuffer;
 
 
         static std::unordered_map<const char*, Ref<sonar::HRTF>> hrtfs;
@@ -42,7 +42,7 @@ namespace sonar{
         */
         //need to move this later, as there needs to be one per listener.
         //remember roll, pitch and yaw
-        OC_STATIC_INLINE IPLCoordinateSpace3 coordinatespace = IPLCoordinateSpace3{
+        inline static IPLCoordinateSpace3 coordinatespace = IPLCoordinateSpace3{
         //Rightis just the cross product of the up and ahead vectors
         IPLVector3{1,0,0},
         //the direction the listeners head is facing

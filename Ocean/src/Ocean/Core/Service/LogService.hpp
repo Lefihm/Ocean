@@ -26,6 +26,7 @@ namespace Ocean {
         virtual ~LogService();
 
         AssignServiceName(LogService);
+        AssignServicePriority(ServicePriority::INITIAL);
 
         static LogService* Instance();
 

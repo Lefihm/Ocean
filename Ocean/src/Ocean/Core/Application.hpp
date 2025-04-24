@@ -22,15 +22,18 @@ namespace Ocean {
      */
     struct ApplicationConfig {
         /** @brief The name of the application. */
-        cstring name = nullptr;
+        cstring name;
 
         /** @brief The starting width of the application window. */
-        u32 width  = 900;
+        u32 width;
         /** @brief The starting height of the application window. */
-        u32 height = 600;
+        u32 height;
 
         /** @brief If the application is fullscreen or not at startup. */
-        b8 fullscreen = false;
+        b8 fullscreen;
+
+        i32 argc;
+        char** argv;
 
         /**
          * @brief Construct a new ApplicationConfig with the given parameters.
@@ -39,8 +42,19 @@ namespace Ocean {
          * @param w The initial width of the Application.
          * @param h The initial height of the Application.
          * @param fullscreen Set's the Application fullscreen at startup. (OPTIONAL)
+         * @param argc (OPTIONAL)
+         * @param argv (OPTIONAL)
          */
-        ApplicationConfig(cstring name, u32 w, u32 h, b8 fullscreen = false) : name(name), width(w), height(h), fullscreen(fullscreen) { }
+        ApplicationConfig(cstring name, u32 w, u32 h, b8 fullscreen = false, i32 argc = 0, char** argv = nullptr) :
+            name(name),
+            width(w),
+            height(h),
+            fullscreen(fullscreen),
+            argc(argc),
+            argv(argv)
+        {
+
+        }
 
     };    // ApplicationConfig
 
@@ -61,8 +75,6 @@ namespace Ocean {
          * @brief Closes the application.
          */
         void Close();
-
-        // void OnEvent(Event& e);
 
         /**
          * @brief Pushes a layer onto the application's LayerStack.

@@ -5,27 +5,34 @@
 
 class Sandbox : public Ocean::Application {
 public:
-	Sandbox(const Ocean::ApplicationConfig& config);
-	~Sandbox();
+    Sandbox(const Ocean::ApplicationConfig& config);
+    ~Sandbox();
 
-};	// Sandbox
+};    // Sandbox
 
 
 
 Ocean::Application* Ocean::CreateApplication(int argc, char** argv) {
-	Ocean::ApplicationConfig config("Ocean Sandbox", 1200, 800);
+    Ocean::ApplicationConfig config(
+        "Ocean Sandbox",
+        1200,
+        800,
+        false,
+        argc,
+        argv
+    );
 
-	return new Sandbox(config);
+    return new Sandbox(config);
 }
 
 
 
 Sandbox::Sandbox(const Ocean::ApplicationConfig& config) : Ocean::Application(config) {
-	oprint(CONSOLE_TEXT_CYAN("Constructing Sandbox Application!\n"));
+    oprint(CONSOLE_TEXT_MAGENTA("Constructing Sandbox Application\n"));
 
-	PushLayer(new Sandbox2D);
+    PushLayer(new Sandbox2D);
 }
 
 Sandbox::~Sandbox() {
-	oprint(CONSOLE_TEXT_CYAN("Deconstructing Sandbox Application!\n"));	
+    oprint(CONSOLE_TEXT_MAGENTA("Deconstructing Sandbox Application\n"));
 }

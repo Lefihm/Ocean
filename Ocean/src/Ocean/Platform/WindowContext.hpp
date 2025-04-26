@@ -8,6 +8,7 @@
  */
 #pragma once
 
+#include "Ocean/Types/Strings.hpp"
 namespace Ocean {
 
     /**
@@ -40,7 +41,7 @@ namespace Ocean {
         /**
          * @brief Shut's down the window handler.
          */
-         static void Shutdown();
+        static void Shutdown();
 
         /**
          * @brief Get's a PlatformID from the window handler.
@@ -48,6 +49,12 @@ namespace Ocean {
          * @return PlatformID
          */
         static PlatformID GetPlatformID();
+        /**
+         * @brief Get the platform name.
+         * 
+         * @return cstring 
+         */
+        static cstring GetPlatformName();
 
     };  // WindowContext
 

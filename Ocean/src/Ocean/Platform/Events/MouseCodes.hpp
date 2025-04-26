@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ocean/Core/Types/Integers.hpp"
+#include "Ocean/Types/Integers.hpp"
 
 namespace Ocean {
 

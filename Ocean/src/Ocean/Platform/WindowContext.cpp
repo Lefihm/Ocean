@@ -35,21 +35,42 @@ namespace Ocean {
     WindowContext::PlatformID WindowContext::GetPlatformID() {
         switch (glfwGetPlatform()) {
             case GLFW_PLATFORM_WIN32:
-                return WindowContext::PlatformID::WINDOWS;
+                return PlatformID::WINDOWS;
 
             case GLFW_PLATFORM_X11:
-                return WindowContext::PlatformID::LINUX_X11;
+                return PlatformID::LINUX_X11;
 
             case GLFW_PLATFORM_WAYLAND:
-                return WindowContext::PlatformID::LINUX_WAYLAND;
+                return PlatformID::LINUX_WAYLAND;
 
             case GLFW_PLATFORM_COCOA:
-                return WindowContext::PlatformID::MACOS_COCOA;
+                return PlatformID::MACOS_COCOA;
         }
 
         throw Exception(Error::BAD_PLATFORM, "Could not find a supported window platform!");
 
         return WindowContext::PlatformID::NONE;
+    }
+
+    cstring WindowContext::GetPlatformName() {
+        switch (GetPlatformID()) {
+            case NONE:
+                break;
+
+            case PlatformID::WINDOWS:
+                return "Windows";
+
+            case PlatformID::LINUX_X11:
+                return "Linux X11";
+
+            case PlatformID::LINUX_WAYLAND:
+                return "Linux Wayland";
+
+            case PlatformID::MACOS_COCOA:
+                return "MacOS Cocoa";
+        }
+
+        return "";
     }
 
 }   // Ocean

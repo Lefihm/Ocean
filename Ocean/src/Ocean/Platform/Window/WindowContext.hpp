@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Ocean/Types/Strings.hpp"
+
 namespace Ocean {
 
     /**

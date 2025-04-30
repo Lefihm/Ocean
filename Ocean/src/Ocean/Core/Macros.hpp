@@ -109,3 +109,12 @@
 
 /** @brief Get the size of an array. */
 #define ArraySize(array) (sizeof(array) / sizeof((array)[0]))
+
+/** @brief Defines the new operator within a scope to use Ocean's memory allocator. */
+#define OC_NEW_OVERLOAD(allocator)                  OC_FINLINE void* operator new(sizet size) { \
+                                                        return oalloca(size, allocator); \
+                                                    }
+
+#define OC_DELETE_OVERLOAD(allocator)               OC_FINLINE void operator delete(void* ptr) { \
+                                                        ofree(ptr, allocator); \
+                                                    }

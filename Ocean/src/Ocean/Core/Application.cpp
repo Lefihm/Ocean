@@ -95,30 +95,27 @@ namespace Ocean {
             // this->m_Window->OnUpdate();
 
             frameCount++;
-
-            if (frameCount >= 3)
-                Close();
         }
     }
 
     void Application::FixedUpdate(Timestep delta) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
     }
     void Application::VariableUpdate(Timestep delta) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
 
         for (Layer* layer : this->m_LayerStack)
             layer->OnUpdate(delta);
     }
     
     void Application::FrameBegin() {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
     }
     void Application::Render(f32 interpolation) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application Render Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application Render Call\n"));
     }
     void Application::FrameEnd() {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameEnd Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameEnd Call\n"));
     }
 
     void Application::OnResize(u16 width, u16 height) {

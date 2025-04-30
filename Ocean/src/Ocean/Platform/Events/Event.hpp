@@ -9,85 +9,78 @@
 #pragma once
 
 #include "Ocean/Types/Bool.hpp"
+#include "Ocean/Types/Integers.hpp"
+#include "Ocean/Types/Strings.hpp"
+
+#include "Ocean/Core/Macros.hpp"
 
 namespace Ocean {
 
     /**
-     * @brief An enum to represent the level of an event.
+     * @brief 
      */
-    typedef enum EventLevel {
+    typedef enum EventCategory : u8 {
         /** @brief Null default. */
         NONE = 0,
 
-        /** @brief System / Window event level. */
-        SYSTEM,
-        /** @brief Internal application event level. */
-        APPLICATION,
-        /** @brief User input event level. */
-        USER
+        APPLICATION    = 1 << 0,
+        WINDOW         = 1 << 1,
+        INPUT          = 1 << 2,
+        KEYBOARD       = 1 << 3,
+        MOUSE          = 1 << 4,
+        MOUSE_BUTTON   = 1 << 5,
 
-    }   EventLevel;
+    }   EventCategory;
 
     /**
-     * @brief A base event that stores the event level.
+     * @brief 
+     */
+    typedef enum class EventType {
+        NONE = 0,
+
+        APP_SHOULD_CLOSE,
+
+        WINDOW_CLOSE,
+        WINDOW_RESIZE,
+        WINDOW_FOCUSED,
+        WINDOW_LOST_FOCUS,
+
+        KEY_PRESSED,
+        KEY_RELEASED,
+        KEY_TYPED,
+
+        MOUSE_PRESSED,
+        MOUSE_RELEASED,
+        MOUSE_MOVED,
+        MOUSE_SCROLLED,
+
+    }   EventType;
+
+    /**
+     * @brief A base event.
      */
     class Event {
     public:
-        Event(EventLevel level);
-        virtual ~Event();
+        virtual ~Event() = default;
 
-        /**
-         * @brief Get the EventLevel of the Event.
-         * 
-         * @return EventLevel 
-         */
-        inline EventLevel GetEventLevel() const { return this->m_Level; }
+        b8 Handled = false;
 
-        /**
-         * @brief Returns if the Event is handled.
-         * 
-         * @return b8
-         */
-        inline b8 IsHandled() const { return this->m_IsHandled; }
-        /**
-         * @brief Set the Event as handled.
-         */
-        inline void SetAsHandled() { this->m_IsHandled = true; }
+        virtual EventType GetEventType() const = 0;
+        virtual u8 GetCategoryFlags() const = 0;
 
-    private:
-        /** @brief Stores the EventLevel of the Event. */
-        const EventLevel m_Level;
+        b8 IsInCategory(EventCategory category) const { return GetCategoryFlags() & category; }
 
-        /** @brief Records if the Event is handled or not. */
-        b8 m_IsHandled;
+    #ifdef OC_DEBUG
+
+        virtual cstring GetEventName() const = 0;
+
+    #endif
+
+        #define AssignEventType(type)           virtual EventType GetEventType() const override { return type; } \
+                                                virtual cstring GetEventName() const override { return OCEAN_MAKESTRING(type); }
+
+        #define AssignEventCategory(category)   virtual u8 GetCategoryFlags() const override { return category; }
 
     };  // Event
-
-
-
-    class SystemEvent : public Event {
-    public:
-        SystemEvent(EventLevel level);
-        virtual ~SystemEvent();
-
-    };  // SystemEvent
-
-
-
-    class ApplicationEvent : public Event {
-    public:
-        ApplicationEvent(EventLevel level);
-        virtual ~ApplicationEvent();
-
-    };  // ApplicationEvent
-
-
-
-    class UserEvent : public Event {
-    public:
-        UserEvent(EventLevel level);
-        virtual ~UserEvent();
-
-    };  // ApplicationEvent
 
 }   // Ocean

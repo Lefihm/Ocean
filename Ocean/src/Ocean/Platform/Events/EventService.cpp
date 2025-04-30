@@ -1,6 +1,6 @@
 #include "EventService.hpp"
 
-#include "Ocean/Core/Logger.hpp"
+#include "Ocean/Platform/Events/Event.hpp"
 
 // libs
 #define GLFW_INCLUDE_NONE
@@ -11,7 +11,8 @@ namespace Ocean {
     EventService::EventService() :
         RuntimeService()
     {
-        
+        if (!this->s_Instance)
+            this->s_Instance = this;
     }
 
     EventService::~EventService()
@@ -27,40 +28,16 @@ namespace Ocean {
         
     }
 
-    void EventService::SignalEvent(Event& e) {
-        switch (e.GetEventLevel()) {
-            case NONE:
-                oprints("Event attempted to be signaled that has an invalid EventLevel!");
-                break;
-
-            case SYSTEM:
-
-                break;
-
-            case APPLICATION:
-
-                break;
-
-            case USER:
-
-                break;
-        }
+    EventService* EventService::Instance() {
+        return s_Instance;
     }
 
-    void EventService::AddEventCallback(EventLevel level, EventCallback_T callback) {
-        switch (level) {
-            case NONE:
-                oprints("Event callback attempted to be added that has an invalid EventLevel!"); break;
+    void EventService::SignalEvent(Event& e) {
 
-            case SYSTEM:
-                this->m_SystemCallbacks.EmplaceBack(callback);      break;
+    }
 
-            case APPLICATION:
-                this->m_ApplicationCallbacks.EmplaceBack(callback); break;
+    void EventService::AddEventCallback(EventCategory category, const EventCallback_T& callback) {
 
-            case USER:
-                this->m_UserCallbacks.EmplaceBack(callback);        break;
-        }
     }
 
     void EventService::DispatchEvents() {

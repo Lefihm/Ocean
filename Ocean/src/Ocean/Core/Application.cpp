@@ -3,6 +3,7 @@
 #include "Ocean/Core/Logger.hpp"
 #include "Ocean/Core/Assert.hpp"
 #include "Ocean/Core/Macros.hpp"
+#include "Ocean/Platform/Window/WindowService.hpp"
 
 namespace Ocean {
 
@@ -72,6 +73,8 @@ namespace Ocean {
                 oprint("Fixed Updates per 5 seconds: %i (%f ups)\n", accumulatorCounter, accumulatorCounter / 5.0f);
                 frameCount = accumulatorCounter = 0;
             }
+
+            WindowService::PollEvents();
 
             FrameBegin();
 

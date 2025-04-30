@@ -32,9 +32,9 @@ Ocean::Application* Ocean::CreateApplication(int argc, char** argv) {
 Sandbox::Sandbox(const Ocean::ApplicationConfig& config) : Ocean::Application(config) {
     oprint(CONSOLE_TEXT_MAGENTA("Constructing Sandbox Application\n"));
 
-    Ocean::WindowService::Instance()->MakeWindow(800, 600, "Sandbox");
+    Ocean::WindowService::MakeWindow(800, 600, "Sandbox");
 
-    PushLayer(new Sandbox2D);
+    // PushLayer(new Sandbox2D);
 }
 
 Sandbox::~Sandbox() {

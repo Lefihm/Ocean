@@ -30,8 +30,6 @@ namespace Ocean {
         AssignServiceName(WindowService);
         AssignServicePriority(ServicePriority::IMMEDIATE);
 
-        inline static WindowService* Instance() { return s_Instance; }
-
         /**
          * @brief Initializes the WindowService and any necessary platform interaction systems.
          */
@@ -44,12 +42,12 @@ namespace Ocean {
         /**
          * @brief Polls the system for events. 
          */
-        void PollEvents();
+        static void PollEvents();
 
         /**
          * @brief Swaps the buffers of each Window.
          */
-        void SwapBuffers();
+        static void SwapBuffers();
 
         /**
          * @brief Set the event polling emmediacy.
@@ -67,8 +65,8 @@ namespace Ocean {
          * @param name The name of the Window.
          * @return b8 True if successful, False otherwise.
          */
-        b8 MakeWindow(u32 width, u32 height, cstring name);
-        b8 DestroyWindow(cstring name);
+        static b8 MakeWindow(u32 width, u32 height, cstring name);
+        static b8 DestroyWindow(cstring name);
 
     private:
         inline static WindowService* s_Instance = nullptr;

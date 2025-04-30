@@ -11,9 +11,6 @@
 #include "Ocean/Platform/Events/EventService.hpp"
 #include "Ocean/Platform/Events/WindowEvent.hpp"
 
-// std
-#include <utility>
-
 // libs
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -112,7 +109,8 @@ namespace Ocean {
     static void WindowRefreshCallback(GLFWwindow* window) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        
+        WindowRefreshEvent e(ref->GetWindowName());
+        SendEvent(e);
     }
 
     /**
@@ -124,8 +122,16 @@ namespace Ocean {
     static void WindowFocusCallback(GLFWwindow* window, i32 focused) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        WindowFocusedEvent e(ref->GetWindowName());
-        SendEvent(e);
+        if (focused == GLFW_TRUE) {
+            WindowFocusedEvent e(ref->GetWindowName());
+
+            SendEvent(e);
+        }
+        else {
+            WindowLostFocusEvent e(ref->GetWindowName());
+
+            SendEvent(e);
+        }
     }
 
     /**
@@ -134,11 +140,11 @@ namespace Ocean {
      * @param window The window prt that was maximized or restored.
      * @param maximized Records if the window has been maximized or not. GLFW_TRUE if yes, GLFW_FALSE if no.
      */
-    static void WindowMaximizeCallback(GLFWwindow* window, i32 maximized) {
-        const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
-
-
-    }
+    /**
+     * static void WindowMaximizeCallback(GLFWwindow* window, i32 maximized) {
+     *     const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
+     * }
+     */
 
     /**
      * @brief A callback for GLFW to call when a Window has been resized.
@@ -188,7 +194,7 @@ namespace Ocean {
     }
 
     void WindowService::PollEvents() {
-        if (this->m_IsImmediate)
+        if (s_Instance->m_IsImmediate)
             glfwPollEvents();
         else
             glfwWaitEvents();
@@ -199,9 +205,10 @@ namespace Ocean {
     }
 
     b8 WindowService::MakeWindow(u32 width, u32 height, cstring name) {
-        this->m_Windows.try_emplace(name, MakeRef<Window>(width, height, name));
+        Ref<Window> window = MakeRef<Window>(width, height, name);
+        s_Instance->m_Windows.emplace(name, window);
 
-        GLFWwindow* ptr = this->m_Windows[name]->GetWindowPtr();
+        GLFWwindow* ptr = window->GetWindowPtr();
 
         glfwSetKeyCallback(ptr, KeyboardKeyCallback);
         glfwSetCharCallback(ptr, KeyboardCharCallback);
@@ -213,14 +220,14 @@ namespace Ocean {
         glfwSetWindowCloseCallback(ptr, WindowCloseCallback);
         glfwSetWindowRefreshCallback(ptr, WindowRefreshCallback);
         glfwSetWindowFocusCallback(ptr, WindowFocusCallback);
-        glfwSetWindowMaximizeCallback(ptr, WindowMaximizeCallback);
+        // glfwSetWindowMaximizeCallback(ptr, WindowMaximizeCallback);
         glfwSetFramebufferSizeCallback(ptr, WindowResizeCallback);
 
         return true;
     }
 
     b8 WindowService::DestroyWindow(cstring name) {
-        this->m_Windows.erase(name);
+        s_Instance->m_Windows.erase(name);
 
         return true;
     }

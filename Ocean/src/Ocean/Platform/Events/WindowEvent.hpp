@@ -62,6 +62,22 @@ namespace Ocean {
 
     };  // WindowResizeEvent
 
+    class WindowRefreshEvent : public Event {
+    public:
+        WindowRefreshEvent(cstring windowName) :
+            m_Window(windowName)
+        { }
+
+        AssignEventCategory(EventCategory::WINDOW);
+        AssignEventType(EventType::WINDOW_REFRESH);
+
+        cstring GetParentName() const { return this->m_Window; }
+
+    private:
+        const cstring m_Window;
+
+    };  // WindowRefreshEvent
+
     class WindowFocusedEvent : public Event {
     public:
         WindowFocusedEvent(cstring windowName) :

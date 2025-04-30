@@ -42,6 +42,7 @@ namespace Ocean {
 
         WINDOW_CLOSE,
         WINDOW_RESIZE,
+        WINDOW_REFRESH,
         WINDOW_FOCUSED,
         WINDOW_LOST_FOCUS,
 

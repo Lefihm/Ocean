@@ -10,6 +10,8 @@
 
 #include "Ocean/Core/Layers/LayerStack.hpp"
 
+#include "Ocean/Platform/Events/Event.hpp"
+
 extern int main(int argc, char** argv);
 
 /**
@@ -75,6 +77,8 @@ namespace Ocean {
          * @brief Closes the application.
          */
         void Close();
+
+        void OnEvent(Event& e);
 
         /**
          * @brief Pushes a layer onto the application's LayerStack.

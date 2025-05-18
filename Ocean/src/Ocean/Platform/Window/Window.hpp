@@ -8,6 +8,7 @@
  */
 #pragma once
 
+#include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Strings.hpp"
 
@@ -29,6 +30,8 @@ namespace Ocean {
         u32 GetWindowWidth() const { return this->m_Data.width; }
         u32 GetWindowHeight() const { return this->m_Data.height; }
 
+        b8 WindowCanClose() const { return this->m_CanClose; }
+
     private:
         struct WindowData {
             Window* ref;
@@ -47,6 +50,8 @@ namespace Ocean {
         GLFWwindow* p_Window;
 
         WindowData m_Data;
+
+        b8 m_CanClose;
 
     };  // Window
 

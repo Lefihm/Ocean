@@ -1,5 +1,6 @@
 #include "WindowService.hpp"
 
+#include "Ocean/Platform/Events/Event.hpp"
 #include "Ocean/Types/FloatingPoints.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 #include "Ocean/Types/Strings.hpp"
@@ -9,7 +10,11 @@
 #include "Ocean/Platform/Window/WindowContext.hpp"
 
 #include "Ocean/Platform/Events/EventService.hpp"
-#include "Ocean/Platform/Events/WindowEvent.hpp"
+#include "Ocean/Platform/Events/EventDispatcher.hpp"
+
+#include "Ocean/Platform/Events/WindowEvents.hpp"
+#include "Ocean/Platform/Events/KeyboardEvents.hpp"
+#include "Ocean/Platform/Events/MouseEvents.hpp"
 
 // libs
 #define GLFW_INCLUDE_NONE
@@ -33,7 +38,14 @@ namespace Ocean {
      * @param mods A bit field describing which modifier keys were held.
      */
     static void KeyboardKeyCallback(GLFWwindow* window, i32 key, i32 scancode, i32 action, i32 mods) {
+        const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
+        if (action == GLFW_PRESS)
+            EventService::SignalEvent(MakeScope<KeyPressedEvent>(ref->GetWindowName(), key));
+        else if (action == GLFW_REPEAT)
+            EventService::SignalEvent(MakeScope<KeyPressedEvent>(ref->GetWindowName(), key, true));
+        else
+            EventService::SignalEvent(MakeScope<KeyReleasedEvent>(ref->GetWindowName(), key));
     }
 
     /**
@@ -44,9 +56,9 @@ namespace Ocean {
      * @param window The window ptr that received a Unicode input.
      * @param codepoint The Unicode code point of the character.
      */
-    static void KeyboardCharCallback(GLFWwindow* window, u32 codepoint) {
+    // static void KeyboardCharCallback(GLFWwindow* window, u32 codepoint) {
 
-    }
+    // }
 
     // Mouse Callbacks
 
@@ -59,7 +71,14 @@ namespace Ocean {
      * @param mods 
      */
     static void MouseButtonCallback(GLFWwindow* window, i32 button, i32 action, i32 mods) {
+        const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
+        if (action == GLFW_PRESS)
+            EventService::SignalEvent(MakeScope<MousePressedEvent>(ref->GetWindowName(), button));
+        else if (action == GLFW_REPEAT)
+            EventService::SignalEvent(MakeScope<MousePressedEvent>(ref->GetWindowName(), button, true));
+        else
+            EventService::SignalEvent(MakeScope<MouseReleasedEvent>(ref->GetWindowName(), button));
     }
 
     /**
@@ -70,7 +89,9 @@ namespace Ocean {
      * @param ypos 
      */
     static void MousePositionCallback(GLFWwindow* window, f64 xpos, f64 ypos) {
+        const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
+        EventService::SignalEvent(MakeScope<MouseMoveEvent>(ref->GetWindowName(), xpos, ypos));
     }
 
     /**
@@ -81,7 +102,9 @@ namespace Ocean {
      * @param yoffset 
      */
     static void MouseScrollCallback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
+        const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
+        EventService::SignalEvent(MakeScope<MouseScrollEvent>(ref->GetWindowName(), xoffset, yoffset));
     }
 
     // Window Callbacks
@@ -94,23 +117,21 @@ namespace Ocean {
     static void WindowCloseCallback(GLFWwindow* window) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        WindowCloseEvent e(ref->GetWindowName());
-        SendEvent(e);
+        EventService::SignalEvent(MakeScope<WindowCloseEvent>(ref->GetWindowName()));
     }
 
     /**
      * @brief A callback for GLFW to call when a Window should refresh.
      * 
      * @note This is often called when the platform flattens windows
-     *          and needs new screen data when the window is uncovered.
+     *       and needs new screen data when the window is uncovered.
      * 
      * @param window The window ptr that should be refreshed.
      */
     static void WindowRefreshCallback(GLFWwindow* window) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        WindowRefreshEvent e(ref->GetWindowName());
-        SendEvent(e);
+        EventService::SignalEvent(MakeScope<WindowRefreshEvent>(ref->GetWindowName()));
     }
 
     /**
@@ -122,16 +143,10 @@ namespace Ocean {
     static void WindowFocusCallback(GLFWwindow* window, i32 focused) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        if (focused == GLFW_TRUE) {
-            WindowFocusedEvent e(ref->GetWindowName());
-
-            SendEvent(e);
-        }
-        else {
-            WindowLostFocusEvent e(ref->GetWindowName());
-
-            SendEvent(e);
-        }
+        if (focused == GLFW_TRUE)
+            EventService::SignalEvent(MakeScope<WindowFocusedEvent>(ref->GetWindowName()));
+        else
+            EventService::SignalEvent(MakeScope<WindowLostFocusEvent>(ref->GetWindowName()));
     }
 
     /**
@@ -160,8 +175,7 @@ namespace Ocean {
     static void WindowResizeCallback(GLFWwindow* window, i32 width, i32 height) {
         const Window* ref = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-        WindowResizeEvent e(ref->GetWindowName(), width, height);
-        SendEvent(e);
+        EventService::SignalEvent(MakeScope<WindowResizeEvent>(ref->GetWindowName(), width, height));
     }
 
 
@@ -184,6 +198,8 @@ namespace Ocean {
         WindowContext::Init();
 
         oprints("Window server is %s\n", WindowContext::GetPlatformName());
+
+        EventService::AddEventCallback<EventCategory::WINDOW>(OC_BIND_EVENT_FN(WindowService::OnEvent));
     }
 
     void WindowService::Shutdown() {
@@ -204,14 +220,21 @@ namespace Ocean {
         /** @todo This is related to how Vulkan handles buffers separately to GLFW, will have to tell the RendererService to Swap Buffers instead. */
     }
 
-    b8 WindowService::MakeWindow(u32 width, u32 height, cstring name) {
-        Ref<Window> window = MakeRef<Window>(width, height, name);
-        s_Instance->m_Windows.emplace(name, window);
+    void WindowService::OnEvent(Event& e) {
+        EventDispatcher dispatcher(e);
 
-        GLFWwindow* ptr = window->GetWindowPtr();
+        dispatcher.Dispatch<WindowCloseEvent>(OC_BIND_EVENT_FN(WindowService::WindowClosed));
+    }
+
+    b8 WindowService::MakeWindow(u32 width, u32 height, cstring name) {
+        s_Instance->m_Windows.try_emplace(name, MakeScope<Window>(width, height, name));
+
+        oprints("Creating Window: %s\n", s_Instance->m_Windows[name]->GetWindowName());
+
+        GLFWwindow* ptr = s_Instance->m_Windows[name]->GetWindowPtr();
 
         glfwSetKeyCallback(ptr, KeyboardKeyCallback);
-        glfwSetCharCallback(ptr, KeyboardCharCallback);
+        // glfwSetCharCallback(ptr, KeyboardCharCallback);
 
         glfwSetMouseButtonCallback(ptr, MouseButtonCallback);
         glfwSetCursorPosCallback(ptr, MousePositionCallback);
@@ -227,9 +250,25 @@ namespace Ocean {
     }
 
     b8 WindowService::DestroyWindow(cstring name) {
-        s_Instance->m_Windows.erase(name);
+        if (s_Instance->m_Windows[name]->WindowCanClose()) {
+            s_Instance->m_Windows.erase(name);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    b8 WindowService::WindowClosed(WindowCloseEvent& e) {
+        if (this->m_Windows[e.GetParentWindow()]->WindowCanClose())
+            DestroyWindow(e.GetParentWindow());
+        else
+            return false;
+
+        if (this->m_Windows.empty())
+            EventService::SignalEvent(MakeScope<AppShouldCloseEvent>());
 
         return true;
     }
 
-} // namespace Ocean
+}   // namespace Ocean

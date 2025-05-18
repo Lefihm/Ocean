@@ -1,6 +1,10 @@
 #include "EventService.hpp"
 
+#include "Ocean/Types/Integers.hpp"
+#include "Ocean/Types/SmartPtrs.hpp"
+
 #include "Ocean/Core/Logger.hpp"
+#include "Ocean/Core/Exceptions.hpp"
 
 #include "Ocean/Platform/Events/Event.hpp"
 
@@ -11,7 +15,9 @@
 namespace Ocean {
 
     EventService::EventService() :
-        RuntimeService()
+        RuntimeService(),
+        m_Events(),
+        m_Callbacks(static_cast<u16>(EventCategory::EVENT_CATEGORY_MAX) - 1)
     {
         if (!this->s_Instance)
             this->s_Instance = this;
@@ -23,42 +29,48 @@ namespace Ocean {
     }
 
     void EventService::Init() {
-
+        if (!s_Instance)
+            throw Exception(Error::BAD_INSTANCE, "EventService Instance Is Not Valid!");
     }
 
     void EventService::Shutdown() {
         
     }
 
-    EventService* EventService::Instance() {
-        return s_Instance;
-    }
-
-    void EventService::SignalEvent(Event& e) {
-        switch (e.GetEventType()) {
-            case EventType::NONE:               oprints("EventType %s\n", e.GetEventName());
-            case EventType::APP_SHOULD_CLOSE:   oprints("EventType %s\n", e.GetEventName());
-            case EventType::WINDOW_CLOSE:       oprints("EventType %s\n", e.GetEventName());
-            case EventType::WINDOW_RESIZE:      oprints("EventType %s\n", e.GetEventName());
-            case EventType::WINDOW_REFRESH:     oprints("EventType %s\n", e.GetEventName());
-            case EventType::WINDOW_FOCUSED:     oprints("EventType %s\n", e.GetEventName());
-            case EventType::WINDOW_LOST_FOCUS:  oprints("EventType %s\n", e.GetEventName());
-            case EventType::KEY_PRESSED:        oprints("EventType %s\n", e.GetEventName());
-            case EventType::KEY_RELEASED:       oprints("EventType %s\n", e.GetEventName());
-            case EventType::KEY_TYPED:          oprints("EventType %s\n", e.GetEventName());
-            case EventType::MOUSE_PRESSED:      oprints("EventType %s\n", e.GetEventName());
-            case EventType::MOUSE_RELEASED:     oprints("EventType %s\n", e.GetEventName());
-            case EventType::MOUSE_MOVED:        oprints("EventType %s\n", e.GetEventName());
-            case EventType::MOUSE_SCROLLED:     oprints("EventType %s\n", e.GetEventName());
-            }
-    }
-
-    void EventService::AddEventCallback(EventCategory category, const EventCallback_T& callback) {
-
+    void EventService::SignalEvent(Scope<Event> e) {
+        s_Instance->m_Events.push(std::move(e));
     }
 
     void EventService::DispatchEvents() {
-        
+        while (!s_Instance->m_Events.empty()) {
+            Scope<Event>& e = s_Instance->m_Events.front();
+            u8 flags = e->GetCategoryFlags();
+
+            oprints("Dispatching %s Event!\n", e->GetEventName());
+
+            if (flags & EventCategoryFlags::APPLICATION && s_Instance->DispatchEvent(*e, EventCategory::APPLICATION)) {
+                s_Instance->m_Events.pop(); continue;
+            }
+            if (flags & EventCategoryFlags::WINDOW && s_Instance->DispatchEvent(*e, EventCategory::WINDOW)) {
+                s_Instance->m_Events.pop(); continue;
+            }
+
+            s_Instance->m_Events.pop();
+        }
+    }
+
+    b8 EventService::DispatchEvent(Event& e, EventCategory category) {
+        if (this->m_Callbacks[category].Empty())
+            return false;
+
+        for (EventCallback_T& callback : this->m_Callbacks[category]) {
+            callback(e);
+
+            if (e.Handled)
+                return true;
+        }
+
+        return false;
     }
 
 }   // Ocean

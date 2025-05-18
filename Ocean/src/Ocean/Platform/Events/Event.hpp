@@ -17,11 +17,26 @@
 namespace Ocean {
 
     /**
-     * @brief 
+     * @brief An enum of different events that can occur.
      */
-    typedef enum EventCategory : u8 {
+    typedef enum class EventCategory : u8 {
+        APPLICATION    = 0,
+        WINDOW         = 1,
+        INPUT          = 2,
+        KEYBOARD       = 3,
+        MOUSE          = 4,
+        MOUSE_BUTTON   = 5,
+
+        EVENT_CATEGORY_MAX
+
+    }   EventCategory;
+
+    /**
+     * @brief An enum of EventCategory's as bit-flags.
+     */
+    typedef enum EventCategoryFlags : u8 {
         /** @brief Null default. */
-        NONE = 0,
+        NONE           = 0,
 
         APPLICATION    = 1 << 0,
         WINDOW         = 1 << 1,
@@ -30,12 +45,13 @@ namespace Ocean {
         MOUSE          = 1 << 4,
         MOUSE_BUTTON   = 1 << 5,
 
-    }   EventCategory;
+    } EventCategoryFlags;
 
     /**
-     * @brief 
+     * @brief An enum of different types of events.
      */
-    typedef enum class EventType {
+    typedef enum class EventType : u8 {
+        /** @brief Null default. */
         NONE = 0,
 
         APP_SHOULD_CLOSE,
@@ -62,26 +78,56 @@ namespace Ocean {
      */
     class Event {
     public:
+        Event(cstring parentWindow) :
+            m_Window(parentWindow)
+        { }
         virtual ~Event() = default;
+
+        b8 operator == (const Event& rhs) const {
+            return this->m_Window == rhs.m_Window && this->GetCategoryFlags() == rhs.GetCategoryFlags() && this->GetEventType() == rhs.GetEventType();
+        }
+        b8 operator != (const Event& rhs) const {
+            return !(*this == rhs);
+        }
 
         b8 Handled = false;
 
         virtual EventType GetEventType() const = 0;
         virtual u8 GetCategoryFlags() const = 0;
 
-        b8 IsInCategory(EventCategory category) const { return GetCategoryFlags() & category; }
+        b8 IsInCategory(EventCategoryFlags category) const { return GetCategoryFlags() & category; }
+
+        cstring GetParentWindow() const { return this->m_Window; }
 
     #ifdef OC_DEBUG
 
-        virtual cstring GetEventName() const = 0;
+        virtual cstring GetEventName() const { return "Base Event"; }
 
     #endif
 
-        #define AssignEventType(type)           virtual EventType GetEventType() const override { return type; } \
+        #define AssignEventType(type)           static EventType GetStaticType() { return type; } \
+                                                virtual EventType GetEventType() const override { return GetStaticType(); } \
                                                 virtual cstring GetEventName() const override { return OCEAN_MAKESTRING(type); }
 
         #define AssignEventCategory(category)   virtual u8 GetCategoryFlags() const override { return category; }
 
+    private:
+        cstring m_Window;
+
     };  // Event
+
+    class AppShouldCloseEvent : public Event {
+    public:
+        AppShouldCloseEvent() :
+            Event(nullptr)
+        { }
+
+        AssignEventCategory(EventCategoryFlags::APPLICATION);
+        AssignEventType(EventType::APP_SHOULD_CLOSE);
+
+    private:
+        OC_NO_COPY(AppShouldCloseEvent);
+
+    };  // AppShouldCloseEvent
 
 }   // Ocean

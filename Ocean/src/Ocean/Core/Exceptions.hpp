@@ -58,6 +58,11 @@ namespace Ocean{
         /** @brief Occurs when you reach code that you weren't supposed to reach. */
         YOU_FUCKED_UP,
 
+        // Service Errors
+
+        /** @brief Occurs when an instance does not have a proper value. */
+        BAD_INSTANCE,
+
         // Window / Platform Errors
 
         /** @brief Occurs when the platform cannot be properly determined. */

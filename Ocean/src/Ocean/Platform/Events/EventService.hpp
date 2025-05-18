@@ -8,12 +8,18 @@
  */
 #pragma once
 
+#include "Ocean/Primitives/HashMap.hpp"
+#include "Ocean/Types/Integers.hpp"
+#include "Ocean/Types/SmartPtrs.hpp"
+
 #include "Ocean/Core/Service.hpp"
 
 #include "Ocean/Platform/Events/Event.hpp"
+#include "Ocean/Primitives/DynamicArray.hpp"
 
 // std
 #include <functional>
+#include <queue>
 
 namespace Ocean {
 
@@ -21,18 +27,15 @@ namespace Ocean {
      * @brief A Service to handle Events.
      */
     class EventService : public RuntimeService<EventService> {
-    private:
-        using EventCallback_T = std::function<void(Event&)>;
-
     public:
-        typedef void (*EventCallback)(Event&);
+        using EventCallback_T = std::function<void(Event&)>;
 
     public:
         EventService();
         virtual ~EventService();
 
         AssignServiceName(EventService);
-        AssignServicePriority(ServicePriority::DONT_CARE);
+        AssignServicePriority(ServicePriority::IMMEDIATE);
 
         /**
          * @brief 
@@ -43,16 +46,12 @@ namespace Ocean {
          */
         virtual void Shutdown() override;
 
-        static EventService* Instance();
-
         /**
          * @brief Sends an Event to the dispatcher.
          * 
          * @param e The Event to signal.
          */
-        void SignalEvent(Event& e);
-
-        #define SendEvent(event)   EventService::Instance()->SignalEvent(event)
+        static void SignalEvent(Scope<Event> e);
 
         /**
          * @brief Adds an EventCallback to dispatch to.
@@ -62,12 +61,20 @@ namespace Ocean {
          * @param category The EventCategory to assign to the callback.
          * @param callback The function to dispatch to.
          */
-        void AddEventCallback(EventCategory category, const EventCallback_T& callback);
+        template <EventCategory category>
+        static void AddEventCallback(EventCallback_T callback) {
+            s_Instance->m_Callbacks[category].EmplaceBack(std::move(callback));
+        }
+
+        #define OC_BIND_EVENT_FN(fn) [this](auto&& ... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
         /**
          * @brief Dispatches events to callbacks.
          */
-        void DispatchEvents();
+        static void DispatchEvents();
+
+    private:
+        b8 DispatchEvent(Event& e, EventCategory category);
 
     private:
         inline static EventService* s_Instance = nullptr;
@@ -76,11 +83,13 @@ namespace Ocean {
          *        rather than immediately dispatching events when recieved.
          *        This may help provide the ability to do input sanitization / duplicate event detection.
          */
+        std::queue<Scope<Event>> m_Events;
 
         /**
          * @todo Make a more dynamic storage system that is based on the EventLevel enum.
          *       Some form of a buck list most likely, a sorted array would work but may be cumbersome.
          */
+        UnorderedMap<EventCategory, DynamicArray<EventCallback_T>> m_Callbacks;
 
     };  // EventProcessor
 

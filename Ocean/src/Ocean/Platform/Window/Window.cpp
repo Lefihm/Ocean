@@ -10,7 +10,8 @@ namespace Ocean {
 
     Window::Window(u32 width, u32 height, const String& name) :
         p_Window(nullptr),
-        m_Data { this, name, width, height }
+        m_Data { this, name, width, height },
+        m_CanClose(true)
     {
         /** @todo Window relationship / config. */
 

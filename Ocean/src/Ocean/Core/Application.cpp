@@ -3,6 +3,8 @@
 #include "Ocean/Core/Logger.hpp"
 #include "Ocean/Core/Assert.hpp"
 #include "Ocean/Core/Macros.hpp"
+
+#include "Ocean/Platform/Events/EventService.hpp"
 #include "Ocean/Platform/Window/WindowService.hpp"
 
 namespace Ocean {
@@ -21,6 +23,8 @@ namespace Ocean {
         oprint(CONSOLE_TEXT_GREEN("Constructing Application\n"));
 
         RuntimeServiceRegistry::InitializeServices();
+
+        EventService::AddEventCallback<EventCategory::APPLICATION>(OC_BIND_EVENT_FN(Application::OnEvent));
     }
 
     Application::~Application() {
@@ -33,6 +37,13 @@ namespace Ocean {
         oprint(CONSOLE_TEXT_GREEN("|- Application Close Call\n"));
 
         this->m_Running = false;
+    }
+
+    void Application::OnEvent(Event& e) {
+        oprint("Application Event: %s", e.GetEventName());
+
+        if (e.GetEventType() == EventType::APP_SHOULD_CLOSE)
+            s_Instance->Close();
     }
 
     void Application::PushLayer(Layer* layer) {
@@ -75,6 +86,7 @@ namespace Ocean {
             }
 
             WindowService::PollEvents();
+            EventService::DispatchEvents();
 
             FrameBegin();
 

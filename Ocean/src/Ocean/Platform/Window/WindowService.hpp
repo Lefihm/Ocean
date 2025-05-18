@@ -8,14 +8,17 @@
  */
 #pragma once
 
+#include "Ocean/Platform/Events/WindowEvents.hpp"
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Strings.hpp"
 
-#include "Ocean/Primitives/HashMap.hpp"
-
 #include "Ocean/Core/Service.hpp"
 
+#include "Ocean/Primitives/HashMap.hpp"
+
 #include "Ocean/Platform/Window/Window.hpp"
+
+#include "Ocean/Platform/Events/Event.hpp"
 
 namespace Ocean {
 
@@ -28,7 +31,7 @@ namespace Ocean {
         virtual ~WindowService();
 
         AssignServiceName(WindowService);
-        AssignServicePriority(ServicePriority::IMMEDIATE);
+        AssignServicePriority(ServicePriority::INITIAL);
 
         /**
          * @brief Initializes the WindowService and any necessary platform interaction systems.
@@ -48,6 +51,8 @@ namespace Ocean {
          * @brief Swaps the buffers of each Window.
          */
         static void SwapBuffers();
+
+        void OnEvent(Event& e);
 
         /**
          * @brief Set the event polling emmediacy.
@@ -69,6 +74,9 @@ namespace Ocean {
         static b8 DestroyWindow(cstring name);
 
     private:
+        b8 WindowClosed(WindowCloseEvent& e);
+
+    private:
         inline static WindowService* s_Instance = nullptr;
 
         /**
@@ -79,7 +87,7 @@ namespace Ocean {
         b8 m_IsImmediate;
 
         /** @brief The list of Windows that exist. */
-        UnorderedMap<cstring, Ref<Window>> m_Windows;
+        UnorderedMap<cstring, Scope<Window>> m_Windows;
 
     };  // WindowService
 

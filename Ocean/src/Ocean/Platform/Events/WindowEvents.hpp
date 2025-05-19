@@ -8,32 +8,23 @@
  */
 #pragma once
 
-#include "Ocean/Types/Strings.hpp"
-
-#include "Ocean/Core/Macros.hpp"
-
 #include "Ocean/Platform/Events/Event.hpp"
 
 namespace Ocean {
 
     class WindowCloseEvent : public Event {
     public:
-        WindowCloseEvent(cstring parentWindow) :
-            Event(parentWindow)
-        { }
+        WindowCloseEvent(WindowID id) : Event(id) { }
 
-        AssignEventCategory(EventCategoryFlags::WINDOW | EventCategoryFlags::APPLICATION);
+        AssignEventCategory(EventCategoryFlags::WINDOW);
         AssignEventType(EventType::WINDOW_CLOSE);
-
-    private:
-        OC_NO_COPY(WindowCloseEvent);
 
     };  // WindowCloseEvent
 
     class WindowResizeEvent : public Event {
     public:
-        WindowResizeEvent(cstring parentWindow, u32 width, u32 height) :
-            Event(parentWindow),
+        WindowResizeEvent(WindowID id, u32 width, u32 height) :
+            Event(id),
             m_Width(width),
             m_Height(height)
         { }
@@ -45,9 +36,6 @@ namespace Ocean {
         u32 GetHeight() const { return this->m_Height; }
 
     private:
-        OC_NO_COPY(WindowResizeEvent);
-
-    private:
         const u32 m_Width;
         const u32 m_Height;
 
@@ -55,9 +43,7 @@ namespace Ocean {
 
     class WindowRefreshEvent : public Event {
     public:
-        WindowRefreshEvent(cstring parentWindow) :
-            Event(parentWindow)
-        { }
+        WindowRefreshEvent(WindowID id) : Event(id) { }
 
         AssignEventCategory(EventCategoryFlags::WINDOW);
         AssignEventType(EventType::WINDOW_REFRESH);
@@ -66,29 +52,19 @@ namespace Ocean {
 
     class WindowFocusedEvent : public Event {
     public:
-        WindowFocusedEvent(cstring parentWindow) :
-            Event(parentWindow)
-        { }
+        WindowFocusedEvent(WindowID id) : Event(id) { }
 
         AssignEventCategory(EventCategoryFlags::WINDOW);
         AssignEventType(EventType::WINDOW_FOCUSED);
-
-    private:
-        OC_NO_COPY(WindowFocusedEvent);
 
     };  // WindowFocusedEvent
 
     class WindowLostFocusEvent : public Event {
     public:
-        WindowLostFocusEvent(cstring parentWindow) :
-            Event(parentWindow)
-        { }
+        WindowLostFocusEvent(WindowID id) : Event(id) { }
 
         AssignEventCategory(EventCategoryFlags::WINDOW);
         AssignEventType(EventType::WINDOW_LOST_FOCUS);
-
-    private:
-        OC_NO_COPY(WindowLostFocusEvent);
 
     };  // WindowLostFocusEvent
 

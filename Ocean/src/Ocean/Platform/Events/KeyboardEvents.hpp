@@ -8,8 +8,6 @@
  */
 #pragma once
 
-#include "Ocean/Types/Strings.hpp"
-
 #include "Ocean/Platform/Events/Event.hpp"
 
 #include "Ocean/Platform/Events/KeyCodes.hpp"
@@ -18,52 +16,42 @@ namespace Ocean {
 
     class KeyPressedEvent : public Event {
     public:
-        KeyPressedEvent(cstring parentWindow, KeyCode key, b8 repeating = false) :
-            Event(parentWindow),
-            m_Key(key),
-            m_Repeating(repeating)
+        KeyPressedEvent(WindowID id, KeyCode key, b8 repeating = false) :
+            Event(id),
+            Key(key),
+            IsRepeating(repeating)
         { }
 
         AssignEventCategory(EventCategoryFlags::KEYBOARD);
         AssignEventType(EventType::KEY_PRESSED);
 
-        KeyCode GetKey() const { return this->m_Key; }
-        b8 IsRepeating() const { return this->m_Repeating; }
-
-    private:
-        KeyCode m_Key;
-        b8 m_Repeating;
+        KeyCode Key;
+        b8 IsRepeating;
 
     };  // KeyPressedEvent
 
     class KeyReleasedEvent : public Event {
     public:
-        KeyReleasedEvent(cstring parentWindow, KeyCode key) :
-            Event(parentWindow),
-            m_Key(key)
+        KeyReleasedEvent(WindowID id, KeyCode key) :
+            Event(id),
+            Key(key)
         { }
 
         AssignEventCategory(EventCategoryFlags::KEYBOARD);
         AssignEventType(EventType::KEY_RELEASED);
 
-        KeyCode GetKey() const { return this->m_Key; }
-
-    private:
-        KeyCode m_Key;
+        KeyCode Key;
 
     };  // KeyReleasedEvent
 
     class KeyTypedEvent : public Event {
     public:
-        KeyTypedEvent(cstring parentWindow) :
-            Event(parentWindow)
+        KeyTypedEvent(WindowID id) :
+            Event(id)
         { }
 
         AssignEventCategory(EventCategoryFlags::KEYBOARD);
         AssignEventType(EventType::KEY_TYPED);
-
-    private:
-
 
     };  // KeyTypedEvent
 

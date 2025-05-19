@@ -40,10 +40,10 @@ namespace Ocean {
     }
 
     void Application::OnEvent(Event& e) {
-        oprint("Application Event: %s", e.GetEventName());
-
         if (e.GetEventType() == EventType::APP_SHOULD_CLOSE)
             s_Instance->Close();
+
+        
     }
 
     void Application::PushLayer(Layer* layer) {

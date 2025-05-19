@@ -8,14 +8,14 @@
  */
 #pragma once
 
-#include "Ocean/Primitives/HashMap.hpp"
-#include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 
 #include "Ocean/Core/Service.hpp"
 
-#include "Ocean/Platform/Events/Event.hpp"
 #include "Ocean/Primitives/DynamicArray.hpp"
+#include "Ocean/Primitives/HashMap.hpp"
+
+#include "Ocean/Platform/Events/Event.hpp"
 
 // std
 #include <functional>

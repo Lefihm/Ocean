@@ -3,7 +3,6 @@
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
 
-#include "Ocean/Core/Logger.hpp"
 #include "Ocean/Core/Exceptions.hpp"
 
 #include "Ocean/Platform/Events/Event.hpp"
@@ -34,7 +33,7 @@ namespace Ocean {
     }
 
     void EventService::Shutdown() {
-        
+        this->m_Callbacks.clear();
     }
 
     void EventService::SignalEvent(Scope<Event> e) {
@@ -45,8 +44,6 @@ namespace Ocean {
         while (!s_Instance->m_Events.empty()) {
             Scope<Event>& e = s_Instance->m_Events.front();
             u8 flags = e->GetCategoryFlags();
-
-            oprints("Dispatching %s Event!\n", e->GetEventName());
 
             if (flags & EventCategoryFlags::APPLICATION && s_Instance->DispatchEvent(*e, EventCategory::APPLICATION)) {
                 s_Instance->m_Events.pop(); continue;

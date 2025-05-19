@@ -8,7 +8,6 @@
  */
 #pragma once
 
-#include "Ocean/Platform/Events/WindowEvents.hpp"
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Strings.hpp"
 
@@ -19,8 +18,11 @@
 #include "Ocean/Platform/Window/Window.hpp"
 
 #include "Ocean/Platform/Events/Event.hpp"
+#include "Ocean/Platform/Events/WindowEvents.hpp"
 
 namespace Ocean {
+
+    using WindowID = u16;
 
     /**
      * @brief A service to handle Windows.
@@ -76,6 +78,8 @@ namespace Ocean {
     private:
         b8 WindowClosed(WindowCloseEvent& e);
 
+        static WindowID MakeWindowID(cstring name);
+
     private:
         inline static WindowService* s_Instance = nullptr;
 
@@ -87,7 +91,7 @@ namespace Ocean {
         b8 m_IsImmediate;
 
         /** @brief The list of Windows that exist. */
-        UnorderedMap<cstring, Scope<Window>> m_Windows;
+        UnorderedMap<WindowID, Scope<Window>> m_Windows;
 
     };  // WindowService
 

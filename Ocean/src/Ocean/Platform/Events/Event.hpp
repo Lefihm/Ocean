@@ -8,6 +8,7 @@
  */
 #pragma once
 
+#include "Ocean/Core/Logger.hpp"
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Strings.hpp"
@@ -15,6 +16,8 @@
 #include "Ocean/Core/Macros.hpp"
 
 namespace Ocean {
+
+    using WindowID = u16;
 
     /**
      * @brief An enum of different events that can occur.
@@ -78,26 +81,30 @@ namespace Ocean {
      */
     class Event {
     public:
-        Event(cstring parentWindow) :
-            m_Window(parentWindow)
-        { }
+        Event(WindowID parentId = 0) :
+            ParentID(parentId)
+        { oprint("%s From Window: %i\n", GetEventName(), this->ParentID); }
+        Event(const Event &) = default;
+        Event(Event &&) = delete;
         virtual ~Event() = default;
 
+        Event &operator=(const Event &) = default;
+        Event &operator=(Event &&) = delete;
+
         b8 operator == (const Event& rhs) const {
-            return this->m_Window == rhs.m_Window && this->GetCategoryFlags() == rhs.GetCategoryFlags() && this->GetEventType() == rhs.GetEventType();
+            return this->ParentID == rhs.ParentID && this->GetCategoryFlags() == rhs.GetCategoryFlags() && this->GetEventType() == rhs.GetEventType();
         }
         b8 operator != (const Event& rhs) const {
             return !(*this == rhs);
         }
 
         b8 Handled = false;
+        WindowID ParentID;
 
         virtual EventType GetEventType() const = 0;
         virtual u8 GetCategoryFlags() const = 0;
 
         b8 IsInCategory(EventCategoryFlags category) const { return GetCategoryFlags() & category; }
-
-        cstring GetParentWindow() const { return this->m_Window; }
 
     #ifdef OC_DEBUG
 
@@ -111,22 +118,12 @@ namespace Ocean {
 
         #define AssignEventCategory(category)   virtual u8 GetCategoryFlags() const override { return category; }
 
-    private:
-        cstring m_Window;
-
     };  // Event
 
     class AppShouldCloseEvent : public Event {
     public:
-        AppShouldCloseEvent() :
-            Event(nullptr)
-        { }
-
         AssignEventCategory(EventCategoryFlags::APPLICATION);
         AssignEventType(EventType::APP_SHOULD_CLOSE);
-
-    private:
-        OC_NO_COPY(AppShouldCloseEvent);
 
     };  // AppShouldCloseEvent
 

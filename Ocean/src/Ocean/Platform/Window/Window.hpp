@@ -18,21 +18,10 @@ struct GLFWwindow;
 
 namespace Ocean {
 
+    using WindowID = u16;
+
     class Window {
     public:
-        Window(u32 width, u32 height, const String& name);
-        ~Window();
-
-        GLFWwindow* GetWindowPtr() const { return this->p_Window; }
-
-        cstring GetWindowName() const { return this->m_Data.name.c_str(); }
-
-        u32 GetWindowWidth() const { return this->m_Data.width; }
-        u32 GetWindowHeight() const { return this->m_Data.height; }
-
-        b8 WindowCanClose() const { return this->m_CanClose; }
-
-    private:
         struct WindowData {
             Window* ref;
 
@@ -43,6 +32,21 @@ namespace Ocean {
 
         };  // WindowData
 
+        public:
+        Window(WindowID id, u32 width, u32 height, const String& name);
+        ~Window();
+
+        GLFWwindow* GetWindowPtr() const { return this->p_Window; }
+
+        cstring GetWindowName() const { return this->m_Data.name.c_str(); }
+
+        u32 GetWindowWidth() const { return this->m_Data.width; }
+        u32 GetWindowHeight() const { return this->m_Data.height; }
+
+        WindowID GetWindowID() const { return this->m_ID; }
+
+        b8 WindowCanClose() const { return this->m_CanClose; }
+
     private:
         OC_NO_COPY(Window);
 
@@ -51,6 +55,7 @@ namespace Ocean {
 
         WindowData m_Data;
 
+        WindowID m_ID;
         b8 m_CanClose;
 
     };  // Window

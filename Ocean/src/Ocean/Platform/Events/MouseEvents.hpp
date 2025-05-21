@@ -20,14 +20,14 @@ namespace Ocean {
     public:
         MousePressedEvent(WindowID id, MouseCode code, b8 repeating = false) :
             Event(id),
-            MouseCode(code),
+            Button(code),
             IsRepeating(repeating)
         { }
 
         AssignEventCategory(EventCategoryFlags::MOUSE_BUTTON);
         AssignEventType(EventType::MOUSE_PRESSED);
 
-        MouseCode MouseCode;
+        MouseCode Button;
         b8 IsRepeating;
 
     };  // MousePressedEvent
@@ -36,13 +36,13 @@ namespace Ocean {
     public:
         MouseReleasedEvent(WindowID id, MouseCode code) :
             Event(id),
-            MouseCode(code)
+            Button(code)
         { }
 
         AssignEventCategory(EventCategoryFlags::MOUSE_BUTTON);
         AssignEventType(EventType::MOUSE_RELEASED);
 
-        MouseCode MouseCode;
+        MouseCode Button;
 
     };  // MouseReleaseEvent
 

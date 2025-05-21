@@ -42,8 +42,6 @@ namespace Ocean {
     void Application::OnEvent(Event& e) {
         if (e.GetEventType() == EventType::APP_SHOULD_CLOSE)
             s_Instance->Close();
-
-        
     }
 
     void Application::PushLayer(Layer* layer) {
@@ -122,7 +120,7 @@ namespace Ocean {
         for (Layer* layer : this->m_LayerStack)
             layer->OnUpdate(delta);
     }
-    
+
     void Application::FrameBegin() {
         // oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
     }

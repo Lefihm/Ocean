@@ -43,6 +43,7 @@ namespace Ocean {
     void EventService::DispatchEvents() {
         while (!s_Instance->m_Events.empty()) {
             Scope<Event>& e = s_Instance->m_Events.front();
+
             u8 flags = e->GetCategoryFlags();
 
             if (flags & EventCategoryFlags::APPLICATION && s_Instance->DispatchEvent(*e, EventCategory::APPLICATION)) {

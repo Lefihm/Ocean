@@ -83,7 +83,7 @@ namespace Ocean {
     public:
         Event(WindowID parentId = 0) :
             ParentID(parentId)
-        { oprint("%s From Window: %i\n", GetEventName(), this->ParentID); }
+        { }
         Event(const Event &) = default;
         Event(Event &&) = delete;
         virtual ~Event() = default;

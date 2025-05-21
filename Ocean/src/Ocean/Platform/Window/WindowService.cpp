@@ -1,5 +1,6 @@
 #include "WindowService.hpp"
 
+#include "Ocean/Core/Macros.hpp"
 #include "Ocean/Platform/Events/Event.hpp"
 #include "Ocean/Types/FloatingPoints.hpp"
 #include "Ocean/Types/SmartPtrs.hpp"
@@ -37,7 +38,7 @@ namespace Ocean {
      * @param action GLFW_PRESS, GLFW_RELEASE, or GLFW_REPEAT.
      * @param mods A bit field describing which modifier keys were held.
      */
-    static void KeyboardKeyCallback(GLFWwindow* window, i32 key, i32 scancode, i32 action, i32 mods) {
+    static void KeyboardKeyCallback(GLFWwindow* window, i32 key, OC_UNUSED i32 scancode, i32 action, OC_UNUSED i32 mods) {
         const Window::WindowData* ref = static_cast<Window::WindowData*>(glfwGetWindowUserPointer(window));
 
         if (action == GLFW_PRESS)
@@ -70,7 +71,7 @@ namespace Ocean {
      * @param action 
      * @param mods 
      */
-    static void MouseButtonCallback(GLFWwindow* window, i32 button, i32 action, i32 mods) {
+    static void MouseButtonCallback(GLFWwindow* window, i32 button, i32 action, OC_UNUSED i32 mods) {
         const Window::WindowData* ref = static_cast<Window::WindowData*>(glfwGetWindowUserPointer(window));
 
         if (action == GLFW_PRESS)

@@ -216,13 +216,15 @@ set(
     -DCMAKE_EXPORT_COMPILE_COMMANDS=1
     -Wall
     -Wextra
-    -Wold-style-cast
-    -Wsign-promo
-    -Woverloaded-virtual
-    -Wctor-dtor-privacy
-    -Wnon-virtual-dtor
-    -Weffc++
-    -pedantic
+    # -Werror
+    # -pedantic
+    # -Wold-style-cast
+    # -Wsign-promo
+    # -Woverloaded-virtual
+    # -Wctor-dtor-privacy
+    # -Wnon-virtual-dtor
+    # -Weffc++
+    # -Wchanges-meaning
 )
 
 string(TIMESTAMP time "%M:%S")

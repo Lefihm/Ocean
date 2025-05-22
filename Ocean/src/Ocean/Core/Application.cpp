@@ -4,6 +4,9 @@
 #include "Ocean/Core/Assert.hpp"
 #include "Ocean/Core/Macros.hpp"
 
+#include "Ocean/Platform/Events/EventService.hpp"
+#include "Ocean/Platform/Window/WindowService.hpp"
+
 namespace Ocean {
 
     #define FixedTimestep 0.02f
@@ -20,6 +23,8 @@ namespace Ocean {
         oprint(CONSOLE_TEXT_GREEN("Constructing Application\n"));
 
         RuntimeServiceRegistry::InitializeServices();
+
+        EventService::AddEventCallback<EventCategory::APPLICATION>(OC_BIND_EVENT_FN(Application::OnEvent));
     }
 
     Application::~Application() {
@@ -32,6 +37,11 @@ namespace Ocean {
         oprint(CONSOLE_TEXT_GREEN("|- Application Close Call\n"));
 
         this->m_Running = false;
+    }
+
+    void Application::OnEvent(Event& e) {
+        if (e.GetEventType() == EventType::APP_SHOULD_CLOSE)
+            s_Instance->Close();
     }
 
     void Application::PushLayer(Layer* layer) {
@@ -73,6 +83,9 @@ namespace Ocean {
                 frameCount = accumulatorCounter = 0;
             }
 
+            WindowService::PollEvents();
+            EventService::DispatchEvents();
+
             FrameBegin();
 
             while (this->m_Accumulator.GetSeconds() >= FixedTimestep) {
@@ -95,30 +108,27 @@ namespace Ocean {
             // this->m_Window->OnUpdate();
 
             frameCount++;
-
-            if (frameCount >= 3)
-                Close();
         }
     }
 
     void Application::FixedUpdate(Timestep delta) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
     }
     void Application::VariableUpdate(Timestep delta) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
 
         for (Layer* layer : this->m_LayerStack)
             layer->OnUpdate(delta);
     }
-    
+
     void Application::FrameBegin() {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameBegin Call\n"));
     }
     void Application::Render(f32 interpolation) {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application Render Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application Render Call\n"));
     }
     void Application::FrameEnd() {
-        oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameEnd Call\n"));
+        // oprint(CONSOLE_TEXT_GREEN("\t|- Application FrameEnd Call\n"));
     }
 
     void Application::OnResize(u16 width, u16 height) {

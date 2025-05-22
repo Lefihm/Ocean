@@ -26,6 +26,10 @@ public:
     using ConstIterator = RandomAccessIterator<const T>;
 
 public:
+    static_assert(std::is_move_constructible<T>::value, "T must be move constructible");
+    static_assert(std::is_destructible<T>::value, "T must be destructible");
+
+public:
     inline DynamicArray() :
         m_Size(0),
         m_Capacity(0),
@@ -37,7 +41,7 @@ public:
      * @param size The initial size of the Dynamic Array.
      */
     inline DynamicArray(u16 size) :
-        m_Size(0),
+        m_Size(size),
         m_Capacity(size),
         p_Data(oallocat(T, this->m_Capacity, oUnmanagedAllocator))
     { }
@@ -97,6 +101,9 @@ public:
             this->p_Data[i] = std::move(*(list.begin() + i));
     }
     inline ~DynamicArray() {
+        for (u16 i = 0; i < this->m_Size; i++)
+            this->p_Data[i].~T();
+
         if (this->p_Data)
             ofree(this->p_Data, oUnmanagedAllocator);
     }
@@ -143,7 +150,8 @@ public:
         if (this->m_Size != rhs->m_Size)
             return false;
 
-        return std::equal(this->Begin(), this->End(), rhs->Begin());
+        return true; /** @todo Make comparison not break equality comparison rules on certian data types like std::function<> */
+        // return std::equal(this->Begin(), this->End(), rhs->Begin());
     }
     /**
      * @brief In-equality comparison with a generic Container.
@@ -427,8 +435,12 @@ public:
         for (u16 i = 0; i < this->m_Size; i++)
             newData[i] = std::move(this->p_Data[i]);
 
-        if (this->p_Data)
+        if (this->p_Data) {
+            for(u16 i = 0; i < this->m_Size; i++)
+                this->p_Data[i].~T();
+
             ofree(this->p_Data, oUnmanagedAllocator);
+        }
 
         this->p_Data = newData;
         this->m_Capacity = newSize;

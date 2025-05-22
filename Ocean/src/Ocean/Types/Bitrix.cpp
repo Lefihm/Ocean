@@ -55,6 +55,8 @@ Bitrix2D& Bitrix2D::operator = (const Bitrix2D& rhs) {
     for (u16 i = 0; i < this->m_Width; i++)
         for (u16 k = 0; k < this->m_VirtHeight; k++)
             this->p_Bits[i][k / 8].Set(k & 7, rhs.p_Bits[i][k / 8][k & 7]);
+
+    return *this;
 }
 
 Bitrix2D& Bitrix2D::operator = (Bitrix2D&& rhs) {
@@ -64,6 +66,8 @@ Bitrix2D& Bitrix2D::operator = (Bitrix2D&& rhs) {
 
     rhs.p_Bits = nullptr;
     rhs.m_RealHeight = rhs.m_VirtHeight = rhs.m_Width = 0;
+
+    return *this;
 }
 
 Bitrix2D::Bitrix2D(u16 width) :

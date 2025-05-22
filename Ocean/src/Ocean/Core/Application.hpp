@@ -10,6 +10,8 @@
 
 #include "Ocean/Core/Layers/LayerStack.hpp"
 
+#include "Ocean/Platform/Events/Event.hpp"
+
 extern int main(int argc, char** argv);
 
 /**
@@ -76,6 +78,8 @@ namespace Ocean {
          */
         void Close();
 
+        void OnEvent(Event& e);
+
         /**
          * @brief Pushes a layer onto the application's LayerStack.
          * 
@@ -104,24 +108,8 @@ namespace Ocean {
          */
         inline static Application* Get() { return s_Instance; }
 
-        /**
-         * @brief A new operator overload within the scope of the Application class.
-         * 
-         * @param size The size of the memory to allocate.
-         * @return void* 
-         */
-        OC_FINLINE void* operator new(sizet size) {
-            return oalloca(size, oSystemAllocator);
-        }
-
-        /**
-         * @brief A delete operator overload within the scope of the Application class.
-         * 
-         * @param ptr The pointer of memory to deallocate.
-         */
-        OC_FINLINE void operator delete(void* ptr) {
-            ofree(ptr, oSystemAllocator);
-        }
+        OC_NEW_OVERLOAD(oSystemAllocator);
+        OC_DELETE_OVERLOAD(oSystemAllocator);
 
     protected:
         friend int ::main(int argc, char** argv);

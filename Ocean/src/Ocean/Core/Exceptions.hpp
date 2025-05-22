@@ -58,17 +58,24 @@ namespace Ocean{
         /** @brief Occurs when you reach code that you weren't supposed to reach. */
         YOU_FUCKED_UP,
 
+        // Service Errors
+
+        /** @brief Occurs when an instance does not have a proper value. */
+        BAD_INSTANCE,
+
         // Window / Platform Errors
 
         /** @brief Occurs when the platform cannot be properly determined. */
         BAD_PLATFORM,
         /** @brief Occurs when the window handle is not valid. */
         BAD_WINDOW_HANDLE,
+        /** @brief Occurs when a window fails to be created. */
+        BAD_WINDOW_CREATION,
 
         // Data Errors
 
         /** @brief Occurs when duplicate data is made when unique data is expected. */
-        DUPLICATE_DATA
+        DUPLICATE_DATA,
 
     } Error;
 

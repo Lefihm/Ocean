@@ -18,7 +18,7 @@ namespace Ocean {
         virtual ~RendererService();
 
         AssignServiceName(RendererService);
-        AssignServicePriority(ServicePriority::INITIAL);
+        AssignServicePriority(ServicePriority::DONT_CARE);
 
         virtual void Init() override;
         virtual void Shutdown() override;

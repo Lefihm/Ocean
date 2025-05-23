@@ -28,7 +28,7 @@ namespace Ocean {
     } ServicePriority;
 
     /** @brief Assigns the given Service name. */
-    #define AssignServiceName(service) inline static constexpr cstring Name() { return OCEAN_CONCAT("Ocean_", OCEAN_MAKESTRING(service)); }
+    #define AssignServiceName(service) inline static constexpr cstring Name() { return OCEAN_MAKESTRING(service); }
     /** @brief Assigns the priority of the Service. It is recommended to use the ServicePriority enum. */
     #define AssignServicePriority(priority) inline static constexpr u8 Priority() { return priority; }
 

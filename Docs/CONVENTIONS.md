@@ -1,18 +1,18 @@
 # Ocean Conventions
 
-## Naming Scheme
+## Naming
 
 ### Open Methods
 
-An "open method" would be considered a method that does not require an instance.
-So either static helper functions or general helper functions that are used.
+An "open method" would be considered a function that is not within the scope of a class or object. So either static helper functions or general helper functions that are used.
 Open methods should follow the naming convention of a lowercase 'o' as the prefix to the name.
-For example:
+
+**For example:**
 
 ```cpp
-oDoSomething() { ... }
+o___() { ... }
 
-oGetTime() { ... }
+oDoSomething() { ... }
 
 oConvertTo___() { ... }
 ```
@@ -20,9 +20,9 @@ oConvertTo___() { ... }
 ### Classes, Structs, and Enums
 
 Classes, structs, and enums should have no prefix, and should be Pascal case.
-Names in pascal case start with a capital letter.
-In case of the names with multiple words, all words will start with capital letters.
-For example:
+Names in pascal case start with a capital letter, and in names with multiple words, all words will start with a capital letter.
+
+**For example:**
 
 ```cpp
 enum Foo { ... };
@@ -33,7 +33,8 @@ class FooBar { ... };
 ```
 
 A special case is when working with implementation specific versions of classes, or structs.
-For example:
+
+**For example:**
 
 ```cpp
 /**
@@ -52,10 +53,21 @@ class glRenderer { ... };
 class vkRenderer { ... };
 ```
 
+### Member Variables
+
+### Class Data
+
+Class variables should follow Pascal Case, but also should provide a prefix to the name. The prefix can be a single letter followed by a underscore, i.e. `m_...`, where `m` describes the variable as a member. Other prefixes may describe other features, such as a pointer may have `p_...`, or a constant may have `c_...`.
+
+### Struct Data
+
+As struct's are often data focused in use, the variable prefix is not as necessary. In the case of a struct, member variables should follow Camel Case. Where each word after the first begins with a capital letter, such as `fooBar`.
+
 ## Documentation
 
 Documentation will be Doxygen compliant, using `/** */` (often refered to as JavaDoc or C-Style conventions).
-For example:
+
+**For example:**
 
 ```cpp
 /**
@@ -71,16 +83,28 @@ void oFoo(i32 p1, i32 p2) { ... }
 
 ## Example Code
 
+Below is a cohesive example code following the aformentioned conventions.
+
 ```cpp
 
 /**
  * @brief A struct to track data and if they are active.
  */
 struct Foo {
-    u32 id; /** @brief The ID of the data Foo is tracking. */
-    b8 isActive; /** @brief Record's if the data is active or not. */
+    /** @brief The ID of the data Foo is tracking. */
+    u32 id;
+    /** @brief Record's if the data is active or not. */
+    b8 isActive;
 
 };  // Foo
+
+/**
+ * @brief Translates the given Foo's id by a given distance.
+ * 
+ * @param f The Foo object to translate.
+ * @param dist The distance to translate the id (forwards or backwards).
+ */
+void oTranslateFooID(Foo& f, i16 dist) { ... }
 
 /**
  * @brief An enum of flags to control Bar.  
@@ -109,12 +133,16 @@ public:
 
     /**
      * @brief Description of DoSomething().
+     * 
+     * @returns i32 Returns the index of something.
      */
-    void DoSomething() { ... }
+    i32 DoSomething() { ... }
 
 private:
-    DynamicArray<Foo> m_ActiveData; /** @brief The list of Foo that is marked as active. */
-    DynamicArray<Foo> m_InactiveData; /** @brief The list of Foo that is marked as indactive. */
+    /** @brief The list of Foo that is marked as active. */
+    DynamicArray<Foo> m_ActiveData;
+    /** @brief The list of Foo that is marked as indactive. */
+    DynamicArray<Foo> m_InactiveData;
 
 };  // Bar
 

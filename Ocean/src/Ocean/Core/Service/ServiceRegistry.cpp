@@ -35,6 +35,7 @@ namespace Ocean {
             oprint(CONSOLE_TEXT_CYAN("|-> Shutting Down %s\n"), _Classes()[i].name);
 
             _Classes()[i].data->Shutdown();
+            _Classes()[i].data.reset();
         }
     }
 

@@ -26,14 +26,6 @@ namespace Ocean {
         /** @brief The name of the application. */
         cstring name;
 
-        /** @brief The starting width of the application window. */
-        u32 width;
-        /** @brief The starting height of the application window. */
-        u32 height;
-
-        /** @brief If the application is fullscreen or not at startup. */
-        b8 fullscreen;
-
         i32 argc;
         char** argv;
 
@@ -47,11 +39,8 @@ namespace Ocean {
          * @param argc (OPTIONAL)
          * @param argv (OPTIONAL)
          */
-        ApplicationConfig(cstring name, u32 w, u32 h, b8 fullscreen = false, i32 argc = 0, char** argv = nullptr) :
+        ApplicationConfig(cstring name, i32 argc = 0, char** argv = nullptr) :
             name(name),
-            width(w),
-            height(h),
-            fullscreen(fullscreen),
             argc(argc),
             argv(argv)
         {

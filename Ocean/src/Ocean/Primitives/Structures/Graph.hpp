@@ -12,7 +12,7 @@
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Integers.hpp"
 
-#include "Ocean/Primitives/Abstract/Container.hpp"
+#include "Ocean/Primitives/Structures/Container.hpp"
 
 /**
  * @brief The abstract Graph container.
@@ -22,6 +22,9 @@
 template <class T>
 class Graph : public Container {
 public:
+    using NodeID = u16;
+
+public:
     virtual ~Graph() = default;
 
     /**
@@ -30,14 +33,14 @@ public:
      * @param from A unique index of the starting vertex.
      * @param to A unique index of the ending vertex.
      */
-    virtual void AddEdge(u16 from, u16 to) = 0;
+    virtual void AddEdge(NodeID from, NodeID to) = 0;
     /**
      * @brief Removes an edge from vertex to vertex.
      * 
      * @param from A unique index of the starting vertex.
      * @param to A unique index of the ending vertex.
      */
-    virtual void RemoveEdge(u16 from, u16 to) = 0;
+    virtual void RemoveEdge(NodeID from, NodeID to) = 0;
 
     /**
      * @brief Determines if the given vertex's share an edge.
@@ -46,6 +49,6 @@ public:
      * @param to A unique index of the ending vertex.
      * @return b8
      */
-    virtual b8 IsAdjacent(u16 from, u16 to) = 0;
+    virtual b8 HasEdge(NodeID from, NodeID to) = 0;
 
 };  // Graph

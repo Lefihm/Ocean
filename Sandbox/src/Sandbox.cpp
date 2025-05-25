@@ -17,9 +17,6 @@ public:
 Ocean::Application* Ocean::CreateApplication(int argc, char** argv) {
     Ocean::ApplicationConfig config(
         "Ocean Sandbox",
-        1200,
-        800,
-        false,
         argc,
         argv
     );

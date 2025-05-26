@@ -194,14 +194,14 @@ public:
      * @param i The index to get in the Array.
      * @return T& 
      */
-    inline constexpr T& operator [] (u16 i) { return this->p_Data[i]; }
+    inline T& operator [] (u16 i) { return this->p_Data[i]; }
     /**
      * @brief Gets the element at the given index.
      * 
      * @param i The index to get in the Array.
      * @return const T& 
      */
-    inline constexpr const T& operator [] (u16 i) const { return this->p_Data[i]; }
+    inline const T& operator [] (u16 i) const { return this->p_Data[i]; }
 
     /**
      * @brief Gets the first element in the Array.

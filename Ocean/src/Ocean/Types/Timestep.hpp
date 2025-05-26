@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Ocean/Primitives/Time.hpp"
+#include "Ocean/Types/Integers.hpp"
+#include <chrono>
 
 /* 
  * The following is a good reference for C++ operator overloading practices.
@@ -12,6 +14,7 @@
  */
 class Timestep {
 public:
+	Timestep() : m_Time(0.0f) { }
 	/**
 	 * @brief Construct a new Timestep object with the given time.
 	 * 
@@ -30,20 +33,22 @@ public:
 	 * 
 	 * @return f32 
 	 */
-	f32 GetSeconds() const { return m_Time; }
+	f32 GetSeconds() const { return this->m_Time; }
 	/**
-	 * @brief Get the Milliseconds object as a floatting point value.
+	 * @brief Get the Milliseconds object as a floating point value.
 	 * 
 	 * @return f32 
 	 */
-	f32 GetMilliseconds() const { return m_Time * 1000.0f; }
+	f32 GetMilliseconds() const { return this->m_Time * 1000.0f; }
+
+	std::chrono::milliseconds GetChronoMilliseconds() const { return std::chrono::milliseconds(static_cast<u32>(this->m_Time * 1000)); }
 
 	/**
 	 * @brief f32 conversion operator. 
 	 * 
 	 * @return f32 in seconds.
 	 */
-	operator f32() const { return m_Time; }
+	operator f32() const { return this->m_Time; }
 
 	Timestep& operator += (const Timestep& other) {
 		this->m_Time += other.m_Time;
@@ -56,7 +61,8 @@ public:
 	}
 
 private:
-	f32 m_Time; /** @brief The amount of time, in seconds, of the Timestep. */
+	/** @brief The amount of time, in seconds, of the Timestep. */
+	f32 m_Time;
 
 };
 

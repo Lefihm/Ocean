@@ -40,7 +40,31 @@ public:
 
 public:
     DirectedGraph() = default;
+    DirectedGraph(const DirectedGraph& other) :
+        m_Nodes(other.m_Nodes),
+        m_Edges(other.m_Edges)
+    { }
+    DirectedGraph(DirectedGraph&& other) :
+        m_Nodes(std::move(other.m_Nodes)),
+        m_Edges(std::move(other.m_Edges))
+    { }
     virtual ~DirectedGraph() = default;
+    
+    DirectedGraph& operator = (const DirectedGraph& rhs) {
+        this->m_Nodes = rhs.m_Nodes;
+        this->m_Edges = rhs.m_Edges;
+
+        return *this;
+    }
+    DirectedGraph& operator = (DirectedGraph&& rhs) {
+        this->m_Nodes = rhs.m_Nodes;
+        this->m_Edges = rhs.m_Edges;
+
+        rhs.m_Nodes.Clear();
+        rhs.m_Edges.Clear();
+
+        return *this;
+    }
 
     /**
      * @brief Add a new node with associated data.
@@ -123,6 +147,7 @@ public:
      * @return const DynamicArray<Node>& 
      */
     const DynamicArray<Node>& GetNodes() const { return this->m_Nodes; }
+    DynamicArray<Node>& GetNodes() { return this->m_Nodes; }
 
     /**
      * @brief Gets all outgoing edges from a node.

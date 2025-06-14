@@ -54,9 +54,13 @@ namespace Ocean {
             s_Instance = this;
     }
 
-    void SchedulerService::Init() { }
+    void SchedulerService::Init() {
+        this->m_Pool.Init();
+    }
 
-    void SchedulerService::Shutdown() { }
+    void SchedulerService::Shutdown() {
+        this->m_Pool.Shutdown();
+    }
 
     std::future<void> SchedulerService::Submit(TaskPacket&& packet) {
         Ref<std::promise<void>> promise = MakeRef<std::promise<void>>();

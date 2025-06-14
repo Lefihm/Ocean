@@ -25,18 +25,24 @@ typedef std::function<void()> VoidFunction;
 
 class ThreadPool {
 public:
-    explicit ThreadPool(u16 threadCount = std::thread::hardware_concurrency()) :
-        m_Workers(threadCount),
+    ThreadPool() :
+        m_Workers(0),
         m_Tasks(),
         m_QueueMutex(),
         m_Condition(),
-        m_Stop(false)
-    {
+        m_Stop(true)
+    { }
+    ~ThreadPool()
+    { }
+
+    void Init(u16 threadCount = std::thread::hardware_concurrency()) {
+        this->m_Stop = false;
+
         Start(threadCount);
     }
-    ~ThreadPool()
-    {
 
+    void Shutdown() {
+        Stop();
     }
 
     void Enqueue(VoidFunction task) {

@@ -13,8 +13,8 @@
 #include "Ocean/Types/Strings.hpp"
 
 // std
-#include <vector>
 #include <iostream>
+#include <vector>
 
 namespace Ocean {
 
@@ -136,6 +136,9 @@ namespace Ocean {
 
     };  // Registrator
 
+    /**
+     * @brief A struct representing a registry entity, storing the name, priority, and the registered class.
+     */
     struct RegistryEntryData {
         cstring name;
         u8 priority;
@@ -166,7 +169,7 @@ namespace Ocean {
          */
         template <typename Service>
         inline static void RegisterClass() {
-            std::cout << "Registering Static " << Service::Name() << " with Priority " << Service::Priority() << std::endl;
+            std::cout << Service::Name() << " | " << Service::Priority() << std::endl;
 
             if (_Classes().empty() || _Classes().back().priority < Service::Priority())
                 _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
@@ -203,6 +206,8 @@ namespace Ocean {
          */
         template <typename Service>
         inline static void RegisterClass() {
+            std::cout << Service::Name() << " | " << Service::Priority() << std::endl;
+
             if (_Classes().empty() || _Classes().back().priority < Service::Priority())
                 _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
             else if (_Classes().front().priority > Service::Priority())

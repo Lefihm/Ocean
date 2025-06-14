@@ -42,7 +42,7 @@ namespace Ocean {
         std::atomic<TaskStatus> status = TaskStatus::PENDING;
 
         Task() = default;
-        Task(const Task&) = delete;
+        Task(const Task&) noexcept;
         Task(Task&& other) noexcept;
         Task& operator = (const Task& rhs);
 
@@ -71,16 +71,16 @@ namespace Ocean {
 
     public:
         SchedulerService();
-        virtual ~SchedulerService();
+        virtual ~SchedulerService() = default;
 
-        void Init() override;
-        void Shutdown() override;
+        virtual void Init() override;
+        virtual void Shutdown() override;
 
         AssignServiceName(SchedulerService);
         AssignServicePriority(ServicePriority::INITIAL);
 
-        std::future<void> Submit(TaskPacket&& packet);
-        std::future<void> Submit(Task&& task);
+        static std::future<void> Submit(TaskPacket&& packet);
+        static std::future<void> Submit(Task&& task);
 
     private:
         friend class Scheduler;

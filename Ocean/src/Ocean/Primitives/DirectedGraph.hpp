@@ -36,6 +36,10 @@ public:
 
         T data;
 
+        Node(NodeID id, T&& data) :
+            id(id),
+            data(std::move(data))
+        { }
     };  // Node
 
 public:
@@ -75,7 +79,7 @@ public:
     NodeID AddNode(const T& data) {
         NodeID id = static_cast<NodeID>(this->m_Nodes.Size());
 
-        this->m_Nodes.EmplaceBack(Node(id, data));
+        this->m_Nodes.EmplaceBack(id, data);
         this->m_Edges.Reserve(id + 1, false);
 
         return id;

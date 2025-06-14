@@ -1,14 +1,26 @@
 #include "SchedulerService.hpp"
 
+#include "Ocean/Types/SmartPtrs.hpp"
+
 #include "Ocean/Core/Exceptions.hpp"
+
 #include "Ocean/Primitives/DirectedGraph.hpp"
 #include "Ocean/Primitives/HashMap.hpp"
 #include "Ocean/Primitives/Time.hpp"
-#include "Ocean/Types/SmartPtrs.hpp"
+
+// std
 #include <exception>
 #include <future>
 
 namespace Ocean {
+
+    Task::Task(const Task& rhs) noexcept
+        : name(rhs.name),
+          action(rhs.action),
+          timeout(rhs.timeout),
+          duration(rhs.duration),
+          status(rhs.status.load())
+    { }
 
     Task::Task(Task&& other) noexcept :
         name(std::move(other.name)),
@@ -32,13 +44,27 @@ namespace Ocean {
 
 
 
+    SchedulerService::SchedulerService() :
+        StaticService(),
+        m_Pool(),
+        m_TaskProfiler(nullptr),
+        m_StageProfiler(nullptr)
+    {
+        if (!s_Instance)
+            s_Instance = this;
+    }
+
+    void SchedulerService::Init() { }
+
+    void SchedulerService::Shutdown() { }
+
     std::future<void> SchedulerService::Submit(TaskPacket&& packet) {
         Ref<std::promise<void>> promise = MakeRef<std::promise<void>>();
         std::future<void> future = promise->get_future();
 
-        this->m_Pool.Enqueue([this, p = std::move(promise), packet = std::move(packet)]() mutable {
+        s_Instance->m_Pool.Enqueue([p = std::move(promise), packet = std::move(packet)]() mutable {
             try {
-                RunPacket(packet);
+                s_Instance->RunPacket(packet);
 
                 p->set_value();
             }

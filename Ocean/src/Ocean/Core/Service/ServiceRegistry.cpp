@@ -8,7 +8,7 @@ namespace Ocean {
 
     void StaticServiceRegistry::InitializeServices() {
         for (const RegistryEntryData& service : _Classes()) {
-            oprint("|> Initializing %s\n", service.name);
+            oprint("|-> Initializing %s\n", service.name);
 
             service.data->Init();
         }
@@ -16,7 +16,7 @@ namespace Ocean {
 
     void StaticServiceRegistry::ShutdownServices() {
         for (i16 i = _Classes().size() - 1; i >= 0; i--) {
-            oprint("|> Shutting Down %s\n", _Classes()[i].name);
+            oprint("|-> Shutting Down %s\n", _Classes()[i].name);
 
             _Classes()[i].data->Shutdown();
         }

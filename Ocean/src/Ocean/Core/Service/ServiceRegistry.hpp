@@ -14,6 +14,7 @@
 
 // std
 #include <vector>
+#include <iostream>
 
 namespace Ocean {
 
@@ -165,6 +166,8 @@ namespace Ocean {
          */
         template <typename Service>
         inline static void RegisterClass() {
+            std::cout << "Registering Static " << Service::Name() << " with Priority " << Service::Priority() << std::endl;
+
             if (_Classes().empty() || _Classes().back().priority < Service::Priority())
                 _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
             else if (_Classes().front().priority > Service::Priority())

@@ -77,7 +77,7 @@ namespace Ocean {
         virtual void Shutdown() override;
 
         AssignServiceName(SchedulerService);
-        AssignServicePriority(ServicePriority::INITIAL);
+        AssignServicePriority(ServicePriority::DONT_CARE);
 
         static std::future<void> Submit(TaskPacket&& packet);
         static std::future<void> Submit(Task&& task);

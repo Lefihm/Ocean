@@ -57,6 +57,8 @@ public:
 
 private:
     void Start(sizet threadCount) {
+        this->m_Workers.Reserve(threadCount);
+
         for (u16 i = 0; i < threadCount; i++) {
             this->m_Workers.EmplaceBack([this] {
                 while (true) {

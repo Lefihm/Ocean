@@ -169,16 +169,20 @@ namespace Ocean {
          */
         template <typename Service>
         inline static void RegisterClass() {
-            std::cout << Service::Name() << " | " << Service::Priority() << std::endl;
-
-            if (_Classes().empty() || _Classes().back().priority < Service::Priority())
+            if (_Classes().empty() || _Classes().back().priority < Service::Priority()) {
                 _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            else if (_Classes().front().priority > Service::Priority())
+            }
+            else if (_Classes().front().priority > Service::Priority()) {
                 _Classes().emplace(_Classes().begin(), RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+            }
             else {
-                for (u16 i = 1; i < _Classes().size(); i++)
-                    if (_Classes()[i].priority < Service::Priority())
-                        _Classes().emplace(_Classes().begin() + i - 1, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+                for (u16 i = 1; i < _Classes().size(); i++) {
+                    if (_Classes()[i - 1].priority < Service::Priority()) {
+                        _Classes().emplace(_Classes().begin() + i, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
+
+                        break;
+                    }
+                }
             }
         }
 
@@ -206,8 +210,6 @@ namespace Ocean {
          */
         template <typename Service>
         inline static void RegisterClass() {
-            std::cout << Service::Name() << " | " << Service::Priority() << std::endl;
-
             if (_Classes().empty() || _Classes().back().priority < Service::Priority())
                 _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
             else if (_Classes().front().priority > Service::Priority())

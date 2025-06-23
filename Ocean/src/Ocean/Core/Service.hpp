@@ -20,17 +20,17 @@ namespace Ocean {
     /**
      * @brief Unified priorities, used to determine Service initialization order.
      */
-    typedef enum ServicePriority {
+    enum ServicePriority : u8 {
         IMMEDIATE = 0,
         INITIAL   = 1,
         DONT_CARE = 2
 
-    } ServicePriority;
+    };
 
     /** @brief Assigns the given Service name. */
-    #define AssignServiceName(service) inline static constexpr cstring Name() { return OCEAN_CONCAT("Ocean_", OCEAN_MAKESTRING(service)); }
+    #define AssignServiceName(service) inline static constexpr cstring Name() { return OCEAN_MAKESTRING(service); }
     /** @brief Assigns the priority of the Service. It is recommended to use the ServicePriority enum. */
-    #define AssignServicePriority(priority) inline static constexpr u8 Priority() { return priority; }
+    #define AssignServicePriority(priority) inline static constexpr u8 Priority() { return static_cast<u8>(priority); }
 
     /**
      * @brief A static service base class. Handles service registry.
@@ -38,12 +38,7 @@ namespace Ocean {
      * @tparam SRTP Service Registry Type
      */
     template <class SRTP>
-    class StaticService : public Registrator<StaticServiceRegistry, SRTP> {
-    public:
-        AssignServiceName(StaticService);
-        AssignServicePriority(ServicePriority::DONT_CARE);
-
-    };  // StaticService
+    class StaticService : public Registrator<StaticServiceRegistry, SRTP> { };  // StaticService
 
     /**
      * @brief A runtime service base class. Handles service registry.
@@ -51,11 +46,6 @@ namespace Ocean {
      * @tparam SRTP Service Registry Type
      */
     template <class SRTP>
-    class RuntimeService : public Registrator<RuntimeServiceRegistry, SRTP> {
-    public:
-        AssignServiceName(RuntimeService);
-        AssignServicePriority(ServicePriority::DONT_CARE);
-
-    };  // RuntimeService
+    class RuntimeService : public Registrator<RuntimeServiceRegistry, SRTP> { };  // RuntimeService
 
 }   // Ocean

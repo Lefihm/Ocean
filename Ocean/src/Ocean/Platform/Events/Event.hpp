@@ -8,7 +8,6 @@
  */
 #pragma once
 
-#include "Ocean/Core/Logger.hpp"
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Integers.hpp"
 #include "Ocean/Types/Strings.hpp"
@@ -17,6 +16,11 @@
 
 namespace Ocean {
 
+    /**
+     * @brief A type definition for a Window ID.
+     * 
+     * This is used to identify windows in the event system.
+     */
     using WindowID = u16;
 
     /**
@@ -31,7 +35,6 @@ namespace Ocean {
         MOUSE_BUTTON   = 5,
 
         EVENT_CATEGORY_MAX
-
     }   EventCategory;
 
     /**
@@ -81,6 +84,11 @@ namespace Ocean {
      */
     class Event {
     public:
+        /**
+         * @brief Constructs a new Event object.
+         * 
+         * @param parentId The ID of the parent window, defaults to 0.
+         */
         Event(WindowID parentId = 0) :
             ParentID(parentId)
         { }
@@ -120,6 +128,9 @@ namespace Ocean {
 
     };  // Event
 
+    /**
+     * @brief An event that signals the application should close.
+     */
     class AppShouldCloseEvent : public Event {
     public:
         AssignEventCategory(EventCategoryFlags::APPLICATION);

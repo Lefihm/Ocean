@@ -44,7 +44,10 @@ public:
         m_Size(size),
         m_Capacity(size),
         p_Data(oallocat(T, this->m_Capacity, oUnmanagedAllocator))
-    { }
+    {
+        for (u16 i = 0; i < this->m_Size; i++)
+            new (&this->p_Data[i]) T();
+    }
     /**
      * @brief Construct a new Dynamic Array from another Dynamic Array.
      * 
@@ -294,6 +297,22 @@ public:
         // Construct the new element in place at the end.
         //
         new (&this->p_Data[this->m_Size]) T(std::forward<Args>(args)...);
+
+        this->m_Size++;
+    }
+
+    /**
+     * @brief Constructs a new object of type T at the end of the Dynamic Array.
+     * 
+     * @param value The value to construct the new object with.
+     */
+    inline constexpr void EmplaceBack(T&& value) {
+        if (this->m_Size == this->m_Capacity)
+            Resize(this->m_Capacity * 2);
+
+        // Construct the new element in place at the end.
+        //
+        new (&this->p_Data[this->m_Size]) T(std::move(value));
 
         this->m_Size++;
     }

@@ -4,12 +4,21 @@
 
 namespace Ocean {
 
+	/**
+	 * @brief A type definition for mouse button codes used in the Ocean Engine.
+	 * 
+	 * This is a 16-bit unsigned integer type, suitable for representing mouse button codes.
+	 */
 	using MouseCode = u16;
 
 	namespace Mouse {
 
+		/**
+		 * @brief An enumeration of mouse buttons used in the Ocean Engine.
+		 * 
+		 * Based on GLFW mouse button codes, but can be extended or modified as needed.
+		 */
 		enum : MouseCode {
-			// From glfw3.h
 			Button0 = 0,
 			Button1 = 1,
 			Button2 = 2,

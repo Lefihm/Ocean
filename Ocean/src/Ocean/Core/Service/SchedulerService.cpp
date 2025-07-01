@@ -14,6 +14,14 @@
 
 namespace Ocean {
 
+    Task::Task(const String& name, std::function<void()> action, Timestep timeout) :
+        name(name),
+        action(action),
+        timeout(timeout),
+        duration(0),
+        status(TaskStatus::PENDING)
+    { }
+
     Task::Task(const Task& rhs) noexcept
         : name(rhs.name),
           action(rhs.action),
@@ -32,8 +40,8 @@ namespace Ocean {
 
     Task& Task::operator = (const Task& rhs) {
         if (this != &rhs) {
-            name = std::move(rhs.name);
-            action = std::move(rhs.action);
+            name = rhs.name;
+            action = rhs.action;
             timeout = rhs.timeout;
             duration = rhs.duration;
             status.store(rhs.status.load());
@@ -45,7 +53,7 @@ namespace Ocean {
 
 
     SchedulerService::SchedulerService() :
-        StaticService(),
+        RuntimeService(),
         m_Pool(),
         m_TaskProfiler(nullptr),
         m_StageProfiler(nullptr)
@@ -55,11 +63,20 @@ namespace Ocean {
     }
 
     void SchedulerService::Init() {
-        this->m_Pool.Init();
+        // this->m_Pool.Init();
     }
 
     void SchedulerService::Shutdown() {
-        this->m_Pool.Shutdown();
+        // this->m_Pool.Shutdown();
+    }
+
+    std::future<void> SchedulerService::Submit(Task&& task) {
+        DirectedGraph<Task> graph;
+        graph.AddNode(std::move(task));
+
+        TaskPacket packet(task.name, std::move(graph));
+
+        return Submit(std::move(packet));
     }
 
     std::future<void> SchedulerService::Submit(TaskPacket&& packet) {
@@ -78,16 +95,6 @@ namespace Ocean {
         });
 
         return future;
-    }
-
-    std::future<void> SchedulerService::Submit(Task&& task) {
-        TaskPacket packet;
-        packet.name = task.name;
-
-        DirectedGraph<Task>& graph = packet.graph;
-        graph.AddNode(std::move(task));
-
-        return Submit(std::move(packet));
     }
 
     void SchedulerService::RunPacket(TaskPacket& packet) {

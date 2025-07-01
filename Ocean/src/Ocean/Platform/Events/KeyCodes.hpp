@@ -4,13 +4,22 @@
 
 namespace Ocean {
 
+    /**
+     * @brief A type definition for key codes used in the Ocean Engine.
+     * 
+     * This is a 16-bit unsigned integer type, suitable for representing key codes.
+     */
     using KeyCode = u16;
 
     namespace Key {
 
+        /**
+         * @brief An enumeration of key codes used in the Ocean Engine.
+         * 
+         * Based on GLFW key codes, but can be extended or modified as needed.
+         */
         typedef enum : KeyCode {
-            // Based Upon Keycodes From glfw3.h
-            Unkown = 0,
+            Unknown = 0,
 
             Space = 32,
             Apostrophe = 39,   /* ' */
@@ -145,6 +154,7 @@ namespace Ocean {
             Menu = 348,
 
             KeyCount = 512
+
         } KeyCode;
 
     }    // Key

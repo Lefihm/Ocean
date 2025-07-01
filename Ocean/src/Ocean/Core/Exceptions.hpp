@@ -11,70 +11,136 @@ namespace Ocean{
      * @brief An enum of different error types that can occur.
      */
     typedef enum Error {
-        /** @brief A broad runtime error. */
+        /**
+         * @brief General runtime error.
+         * @details This error is thrown when a runtime error occurs that does not fit into any other category.
+         *          It is typically used to indicate that something unexpected happened during the execution of the program.
+         */
         RUNTIME_ERROR,
-        /** @brief Logic errors */
+        /**
+         * @brief General invalid argument error.
+         * @details This error is thrown when an argument passed to a function is not valid.
+         *          It is typically used to indicate that the function cannot proceed with the given argument.
+         */
         INVALID_ARGUMENT,
-        /** @brief  */
+        /**
+         * @brief General domain error.
+         * @details This error is thrown when a value is outside the valid domain.
+         */
         DOMAIN_ERROR,
-        /** @brief Length */
+        /**
+         * @brief General length error.
+         * @details This error is thrown when a value is not of the expected length.
+         */
         LENGTH_ERROR,
-        /** @brief Out of range */
+        /**
+         * @brief General out of range error.
+         * @details This error is thrown when a value is outside the expected range.
+         */
         OUT_OF_RANGE,
-        /** @brief This error specifically is to be used by threads. */
+        /**
+         * @brief General future error.
+         * @details This error is thrown when a future is not ready to be accessed.
+         *          It is typically used in asynchronous programming contexts.
+         */
         FUTURE_ERROR,
-
-        /** @brief runtime errors */
-        RANGE_ERROR,
-        /** @brief Overflow error */
+        /**
+         * @brief General overflow error.
+         * @details This error is thrown when a value exceeds the maximum limit.
+         */
         OVERFLOW_ERROR,
-        /** @brief Underflow error */
+        /**
+         * @brief General underflow error.
+         * @details This error is thrown when a value is below the minimum limit.
+         */
         UNDERFLOW_ERROR,
-        /** @brief Regex errors */
+        /**
+         * @brief General regex error.
+         * @details This error is thrown when a regular expression fails to match.
+         */
         REGEX_ERROR,
-        /** @brief General system failure */
+        /**
+         * @brief General system error.
+         * @details This error is thrown when a system-level error occurs.
+         */
         SYSTEM_ERROR,
-        /** @brief Input output failure */
+        /**
+         * @brief General input/output failure.
+         * @details This error is thrown when an input/output operation fails.
+         */
         IOS_FAILURE,
-        /** @brief Filesystem failure */
+        /**
+         * @brief General filesystem error.
+         * @details This error is thrown when a filesystem operation fails.
+         */
         FILESYSTEM_ERROR,
-        /** @brief unsure if this ever made it in c++, here just in case */
-        TX_EXCEPTION,
-        /** @brief should be thrown when typeid is nullptr of polymorphic type */
+        /**
+         * @brief General bad typeid error.
+         * @details This error is thrown when typeid is nullptr of polymorphic type.
+         */
         BAD_TYPEID,
-        BAD_CAST,
-        BAD_ANY_CAST,
-        BAD_OPTIONAL_ACCESS,
-        BAD_EXCPECTED_ACCESS,
+        /**
+         * @brief General bad expected access error.
+         * @details This error is thrown when an expected value is not present.
+         */
+        BAD_EXPECTED_ACCESS,
+        /**
+         * @brief General bad weak pointer error.
+         * @details This error is thrown when a weak pointer is accessed but the object it points to has been deleted.
+         */
         BAD_WEAK_PTR,
+        /**
+         * @brief General bad function call error.
+         * @details This error is thrown when a function is called in an invalid context or with invalid arguments.
+         */
         BAD_FUNCTION_CALL,
+        /**
+         * @brief General bad alloc error.
+         * @details This error is thrown when memory allocation fails.
+         */
         BAD_ALLOC,
+        /**
+         * @brief General bad array new length error.
+         * @details This error is thrown when a new array is created with an invalid length.
+         */
         BAD_ARRAY_NEW_LENGTH,
+        /**
+         * @brief General bad exception error.
+         * @details This error is thrown when an exception is thrown in a context where it is not allowed.
+         */
         BAD_EXCEPTION,
-        BAD_VARIANT_ACCESS,
 
-        // Ocean Specific Errors
+        /**
+         * @brief Occurs when a template is used incorrectly.
+         * @details This error is thrown when a template is used in a way that is not allowed.
+         */
+        BAD_TEMPLATE,
 
-        /** @brief Occurs when you reach code that you weren't supposed to reach. */
-        YOU_FUCKED_UP,
-
-        // Service Errors
-
-        /** @brief Occurs when an instance does not have a proper value. */
+        /**
+         * @brief Occurs when code reaches a point that it wasn't supposed to reach.
+         */
+        YOU_SHOULD_NOT_BE_HERE,
+        /**
+         * @brief Occurs when an instance does not have a proper value.
+         */
         BAD_INSTANCE,
 
-        // Window / Platform Errors
-
-        /** @brief Occurs when the platform cannot be properly determined. */
+        /**
+         * @brief Occurs when the platform cannot be properly determined.
+         */
         BAD_PLATFORM,
-        /** @brief Occurs when the window handle is not valid. */
+        /**
+         * @brief Occurs when the window handle is not valid.
+         */
         BAD_WINDOW_HANDLE,
-        /** @brief Occurs when a window fails to be created. */
+        /**
+         * @brief Occurs when a window fails to be created.
+         */
         BAD_WINDOW_CREATION,
 
-        // Data Errors
-
-        /** @brief Occurs when duplicate data is made when unique data is expected. */
+        /**
+         * @brief Occurs when duplicate data is made when unique data is expected.
+         */
         DUPLICATE_DATA,
 
     } Error;

@@ -1,6 +1,6 @@
 /**
  * @file ServiceRegistry.hpp
- * @brief 
+ * @brief Service and class registration utilities for Ocean.
  * 
  * @author Evan F.
  * 
@@ -13,7 +13,6 @@
 #include "Ocean/Types/Strings.hpp"
 
 // std
-#include <iostream>
 #include <vector>
 
 namespace Ocean {
@@ -22,29 +21,53 @@ namespace Ocean {
     //  https://gist.github.com/jcarrano/39f5acbf3d94aeed802bda15aa7e79f9
 
     /**
-     * @brief A class registry template.
+     * @brief Base class for registrators, enabling polymorphic storage.
+     */
+    class BaseRegistrator {
+    public:
+        BaseRegistrator() = default;
+        virtual ~BaseRegistrator() = default;
+
+        inline virtual void Init() { }
+        inline virtual void Shutdown() { }
+
+    };  // BaseRegistrator
+
+    /**
+    * @brief Represents a registered service entry, storing its name, priority, and instance.
+    */
+    struct RegistryEntryData {
+        /** @brief Name of the registered service. */
+        cstring name;
+        /** @brief Priority of the registered service. */
+        u8 priority;
+
+        /** @brief Pointer to the registered service instance. */
+        Ref<BaseRegistrator> data;
+
+    };  // RegistryEntryData
+
+    /**
+     * @brief Template for a class registry.
      *
-     * @tparam Container The container type of the registry.
-     * @tparam CRTP Class Registry Type
+     * @tparam Container The container type used to store registered classes.
+     * @tparam CRTP The derived registry type (CRTP pattern).
      */
     template <typename Container, typename CRTP>
     class ClassRegistry {
     public:
-        using ContainerT = Container;
-
         /**
-         * @brief Gets the container of classes.
+         * @brief Returns the container holding all registered classes.
          * 
-         * @return const ContainerT& 
+         * @return const Container& Reference to the container of registered classes.
          */
-        inline static constexpr const ContainerT& Classes() { return _Classes(); }
+        inline static constexpr const Container& Classes() { return _Classes(); }
 
         /**
-         * @brief Holds a class in a registry collector class.
+         * @brief Helper for registering a class at static initialization.
          * 
-         * @details By declaring a static member using this template,
-         *          the containing class will be added to a container
-         *          at static-runtime.
+         * @details Declaring a static member of this type in a class will
+         *          automatically register it in the registry at static initialization.
          * 
          * @tparam SubClass The class to register.
          */
@@ -62,56 +85,73 @@ namespace Ocean {
 
     protected:
         /**
-         * @brief Structure to protect the RegisterClass function.
+         * @brief Internal helper struct to provide access to RegisterClass.
          */
         struct AccessRegisterImpl : CRTP {
             /**
-             * @brief Registers a class to the registry.
+             * @brief Registers a class in the registry.
              * 
              * @tparam Class The class to register.
              */
             template <typename Class>
             inline static constexpr void RegisterClass() { CRTP::template RegisterClass<Class>(); }
+
         };  // AccessRegisterImpl
 
     protected:
         /**
-         * @brief Internal container access.
+         * @brief Internal accessor for the static container.
          *
-         * @details By using a static method instead of a member problems
-         *          with initialization order are avoided.
+         * @details Using a static function avoids static initialization order issues.
          * 
-         * @return ContainerT& 
+         * @return ContainerT& Reference to the static container.
          */
-        inline static ContainerT& _Classes() {
-            static ContainerT c { };
+        inline static Container& _Classes() {
+            static Container c { };
 
             return c;
+        }
+
+        /**
+         * @brief Registers a service class in the registry, ordered by priority.
+         * 
+         * @tparam Service The service type to register.
+         */
+        template <typename Service>
+        inline static void RegisterClass() {
+            auto& classes = _Classes();
+
+            // Prevent duplicate registration by name
+            for (const auto& entry : classes)
+                if (entry.name == Service::Name())
+                    return;
+
+            RegistryEntryData newEntry {
+                Service::Name(),
+                Service::Priority(),
+                MakeRef<Service>()
+            };
+
+            auto it = classes.begin();
+
+            // Find the correct insertion point: after last with <= priority
+            for (; it != classes.end(); ++it)
+                if (it->priority > Service::Priority())
+                    break;
+
+            // Insert the new entry at the found position
+            classes.insert(it, newEntry);
         }
 
     };  // ClassRegistry
 
     /**
-     * @brief Base non-templated registrator to enable pointer storage.
-     */
-    class BaseRegistrator {
-    public:
-        BaseRegistrator() = default;
-        virtual ~BaseRegistrator() = default;
-
-        inline virtual void Init() { };
-        inline virtual void Shutdown() { };
-
-    };  // BaseRegistrator
-
-    /**
-     * @brief Intermediary that registers classes to the given registry.
+     * @brief Registers a class with a given registry using CRTP.
      * 
-     * @details When this template is instantiated, the derived class will
-     *          be registered in RegistryClass.
+     * @details Instantiating this template registers the derived class in the specified registry.
      * 
-     * @tparam RegistryClass The registry to use.
-     * @tparam CRTP Class Registry Type
+     * @tparam RegistryClass The registry to register with.
+     * @tparam CRTP The derived class type.
      */
     template <typename RegistryClass, typename CRTP>
     class Registrator : public BaseRegistrator {
@@ -121,8 +161,7 @@ namespace Ocean {
     #ifdef __clang__
 
         /**
-         * @brief Clang "used" attribute of a static member variable does not instantiate
-         *        the same so a accessor is needed.
+         * @brief Ensures Clang instantiates the static member variable.
          */
         inline static RegistratorT& _ClangAttribute() __attribute__((used)) {
             return s_Registrator;
@@ -131,95 +170,42 @@ namespace Ocean {
     #endif
 
     private:
-        /** @brief A static member variable to instantiate the class in the registry. */
+        /** @brief Static member to trigger registration at static initialization. */
         inline static RegistratorT s_Registrator __attribute__((used)) { };
 
     };  // Registrator
 
     /**
-     * @brief A struct representing a registry entity, storing the name, priority, and the registered class.
-     */
-    struct RegistryEntryData {
-        cstring name;
-        u8 priority;
-
-        Ref<BaseRegistrator> data;
-
-    };  // RegistryEntryData
-
-    /**
-     * @brief A registery of Services that have a lifetime outside of the Ocean Applicaiton.
+     * @brief Registry for services with a lifetime outside the Ocean application.
      */
     class StaticServiceRegistry : public ClassRegistry<std::vector<RegistryEntryData>, StaticServiceRegistry> {
     public:
         /**
-         * @brief Initializes the registered services.
+         * @brief Initializes all registered static services.
          */
         static void InitializeServices();
-         /**
-          * @brief Shuts down the registered services.
-          */
-        static void ShutdownServices();
 
-    protected:
         /**
-         * @brief Registers a service class to the registry.
-         * 
-         * @tparam Service The service type to register.
+         * @brief Shuts down all registered static services.
          */
-        template <typename Service>
-        inline static void RegisterClass() {
-            if (_Classes().empty() || _Classes().back().priority < Service::Priority()) {
-                _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            }
-            else if (_Classes().front().priority > Service::Priority()) {
-                _Classes().emplace(_Classes().begin(), RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            }
-            else {
-                for (u16 i = 1; i < _Classes().size(); i++) {
-                    if (_Classes()[i - 1].priority < Service::Priority()) {
-                        _Classes().emplace(_Classes().begin() + i, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-
-                        break;
-                    }
-                }
-            }
-        }
+        static void ShutdownServices();
 
     };  // ServiceRegistry
 
     /**
-     * @brief A registry of Services that have a lifetime within the Ocean Application.
+     * @brief Registry for services with a lifetime within the Ocean application.
      */
     class RuntimeServiceRegistry : public ClassRegistry<std::vector<RegistryEntryData>, RuntimeServiceRegistry> {
     public:
         /**
-         * @brief Initializes the registered services.
+         * @brief Initializes all registered runtime services.
          */
         static void InitializeServices();
-         /**
-          * @brief Shuts down the registered services.
-          */
-        static void ShutdownServices();
 
-    protected:
         /**
-         * @brief Registers a service class to the registry.
-         * 
-         * @tparam Service The service type to register.
+         * @brief Shuts down all registered runtime services.
          */
-        template <typename Service>
-        inline static void RegisterClass() {
-            if (_Classes().empty() || _Classes().back().priority < Service::Priority())
-                _Classes().emplace_back(RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            else if (_Classes().front().priority > Service::Priority())
-                _Classes().emplace(_Classes().begin(), RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            else {
-                for (u16 i = 1; i < _Classes().size(); i++)
-                    if (_Classes()[i].priority < Service::Priority())
-                        _Classes().emplace(_Classes().begin() + i - 1, RegistryEntryData { Service::Name(), Service::Priority(), MakeRef<Service>() });
-            }
-        }
+        static void ShutdownServices();
 
     };  // ServiceRegistry
 

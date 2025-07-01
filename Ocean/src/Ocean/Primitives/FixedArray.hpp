@@ -28,8 +28,18 @@ public:
     public:
     FixedArray() :
         m_Size(0),
-        p_Data(oallocat(T, S, oUnmanagedAllocator))
+        p_Data(nullptr)
     { }
+    FixedArray(u16 size) :
+        m_Size(size),
+        p_Data(oallocat(T, S, oUnmanagedAllocator))
+    {
+        if (size > S)
+            throw Ocean::Exception(Ocean::Error::OVERFLOW_ERROR, "FixedArray size greater than capacity!");
+
+        for (u16 i = 0; i < this->m_Size; i++)
+            new (&this->p_Data[i]) T();
+    }
     FixedArray(const FixedArray& rhs) :
         m_Size(rhs.m_Size),
         p_Data(oallocat(T, S, oUnmanagedAllocator))
@@ -214,6 +224,17 @@ public:
      * @return u16 - The size of the Array.
      */
     constexpr u16 Size() const { return this->m_Size; }
+    /**
+     * @brief Sets the size of the Array.
+     * 
+     * @param size The new size of the Array.
+     */
+    constexpr void SetSize(u16 size) {
+        if (size > S)
+            throw Ocean::Exception(Ocean::Error::OVERFLOW_ERROR, "Size exceeds FixedArray capacity!");
+
+        this->m_Size = size;
+    }
     /**
      * @return u16 - The capacity of the Array.
      */

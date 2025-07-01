@@ -16,25 +16,21 @@ namespace Ocean {
     EventService::EventService() :
         RuntimeService(),
         m_Events(),
-        m_Callbacks(static_cast<u16>(EventCategory::EVENT_CATEGORY_MAX) - 1)
+        m_Callbacks(static_cast<u16>(EventCategory::EVENT_CATEGORY_MAX))
     {
         if (!this->s_Instance)
             this->s_Instance = this;
     }
 
     EventService::~EventService()
-    {
-        
-    }
+    { }
 
     void EventService::Init() {
         if (!s_Instance)
             throw Exception(Error::BAD_INSTANCE, "EventService Instance Is Not Valid!");
     }
 
-    void EventService::Shutdown() {
-        this->m_Callbacks.clear();
-    }
+    void EventService::Shutdown() { }
 
     void EventService::SignalEvent(Scope<Event> e) {
         s_Instance->m_Events.push(std::move(e));
@@ -52,16 +48,28 @@ namespace Ocean {
             if (flags & EventCategoryFlags::WINDOW && s_Instance->DispatchEvent(*e, EventCategory::WINDOW)) {
                 s_Instance->m_Events.pop(); continue;
             }
+            if (flags & EventCategoryFlags::INPUT && s_Instance->DispatchEvent(*e, EventCategory::INPUT)) {
+                s_Instance->m_Events.pop(); continue;
+            }
+            if (flags & EventCategoryFlags::KEYBOARD && s_Instance->DispatchEvent(*e, EventCategory::KEYBOARD)) {
+                s_Instance->m_Events.pop(); continue;
+            }
+            if (flags & EventCategoryFlags::MOUSE && s_Instance->DispatchEvent(*e, EventCategory::MOUSE)) {
+                s_Instance->m_Events.pop(); continue;
+            }
+            if (flags & EventCategoryFlags::MOUSE_BUTTON && s_Instance->DispatchEvent(*e, EventCategory::MOUSE_BUTTON)) {
+                s_Instance->m_Events.pop(); continue;
+            }
 
             s_Instance->m_Events.pop();
         }
     }
 
     b8 EventService::DispatchEvent(Event& e, EventCategory category) {
-        if (this->m_Callbacks[category].Empty())
+        if (this->m_Callbacks[static_cast<u16>(category)].Empty())
             return false;
 
-        for (EventCallback_T& callback : this->m_Callbacks[category]) {
+        for (EventCallback_T& callback : this->m_Callbacks[static_cast<u16>(category)]) {
             callback(e);
 
             if (e.Handled)

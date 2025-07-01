@@ -2,21 +2,21 @@
 
 #include <Ocean/Core/Logger.hpp>
 
-Sandbox2D::Sandbox2D() : Layer("Sandbox2D") {
+#include <Ocean/Platform/Events/EventService.hpp>
 
-}
+Sandbox2D::Sandbox2D() : Layer("Sandbox2D")
+{ }
 
 void Sandbox2D::OnAttach() {
-    // Ocean::EventService::AddEventCallback<Ocean::EventCategory::APPLICATION>(OC_BIND_EVENT_FN(Sandbox2D::OnEvent));
+    oprint("Sandbox Layer Attach: {%s}\n", this->GetName().c_str());
 
-    oprint("Sandbox Layer Name: {%s}\n", this->GetName().c_str());
+    // Ocean::EventService::AddEventCallback<Ocean::EventCategory::KEYBOARD>(OC_BIND_EVENT_FN(Sandbox2D::OnEvent));
 }
 
 void Sandbox2D::OnDetach() {
-    // TODO Remove event callback
-    // Ocean::EventService::RemoveEventCallback<Ocean::EventCategory::APPLICATION>(OC_BIND_EVENT_FN(Sandbox2D::OnEvent));
+    // Ocean::EventService::RemoveEventCallback<Ocean::EventCategory::KEYBOARD>(OC_BIND_EVENT_FN(Sandbox2D::OnEvent));
 
-    oprint("Sandbox Layer Detach\n");
+    oprint("Sandbox Layer Detach: {%s}\n", this->GetName().c_str());
 }
 
 void Sandbox2D::OnUpdate(Timestep ts) {

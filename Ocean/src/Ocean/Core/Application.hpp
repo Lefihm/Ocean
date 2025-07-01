@@ -26,7 +26,9 @@ namespace Ocean {
         /** @brief The name of the application. */
         cstring name;
 
+        /** @brief The command line arguments count. */
         i32 argc;
+        /** @brief The command line arguments. */
         char** argv;
 
         /**
@@ -35,17 +37,15 @@ namespace Ocean {
          * @param name The name of the Application.
          * @param w The initial width of the Application.
          * @param h The initial height of the Application.
-         * @param fullscreen Set's the Application fullscreen at startup. (OPTIONAL)
-         * @param argc (OPTIONAL)
-         * @param argv (OPTIONAL)
+         * @param fullscreen (OPTIONAL) Set's the Application fullscreen at startup.
+         * @param argc (OPTIONAL) The command line arguments count.
+         * @param argv (OPTIONAL) The command line arguments.
          */
         ApplicationConfig(cstring name, i32 argc = 0, char** argv = nullptr) :
             name(name),
             argc(argc),
             argv(argv)
-        {
-
-        }
+        { }
 
     };    // ApplicationConfig
 
@@ -62,11 +62,10 @@ namespace Ocean {
         Application(const ApplicationConfig& config);
         virtual ~Application();
 
-        /**
-         * @brief Closes the application.
-         */
+        /** @brief Closes the application. */
         void Close();
 
+        /** @brief Occurs when an event is received by the application. */
         void OnEvent(Event& e);
 
         /**
@@ -105,7 +104,8 @@ namespace Ocean {
 
     protected:
         /**
-         * @brief The primary runtime of the application.
+         * @brief Runs the main loop of the application.
+         * @details This function will run until the application is closed.
          */
         void Run();
 
@@ -123,17 +123,19 @@ namespace Ocean {
         void VariableUpdate(Timestep delta);
         
         /**
-         * @brief Runs at the beginning of each frame.
+         * @brief Runs at the start of each frame.
+         * @details This is where the application is prepared for rendering.
          */
         void FrameBegin();
         /**
-         * @brief Runs after VariableUpdate is completed (at least while single threaded).
+         * @brief Runs after VariableUpdate is completed.
          * 
          * @param interpolation The interpolation since the last frame.
          */
         void Render(f32 interpolation);
         /**
          * @brief Runs at the end of each frame.
+         * @details This is where the frame is presented to the user.
          */
         void FrameEnd();
 
@@ -159,8 +161,9 @@ namespace Ocean {
 
     /**
      * @brief Create an Application object defined by the user.
+     * @details This function is called by the main function to create the application instance.
      * 
-     * @return Application* 
+     * @return Application* A pointer to the created Application object.
      */
     Application* CreateApplication(int argc, char** argv);
 

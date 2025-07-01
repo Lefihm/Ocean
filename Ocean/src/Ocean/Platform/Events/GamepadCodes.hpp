@@ -4,6 +4,11 @@
 
 namespace Ocean {
 
+	/**
+	 * @brief An enumeration of gamepad axes used in the Ocean Engine.
+	 * 
+	 * Based on common gamepad axis mappings, but can be extended or modified as needed.
+	 */
 	enum GamepadAxis : u8 {
 		GAMEPAD_AXIS_LEFTX = 0,
 		GAMEPAD_AXIS_LEFTY,
@@ -15,6 +20,11 @@ namespace Ocean {
 
 	}; // enum GamepadAxis
 
+	/**
+	 * @brief An enumeration of gamepad buttons used in the Ocean Engine.
+	 * 
+	 * Based on common gamepad button mappings, but can be extended or modified as needed.
+	 */
 	enum GamepadButtons : u8 {
 		GAMEPAD_BUTTON_A = 0,
 		GAMEPAD_BUTTON_B,

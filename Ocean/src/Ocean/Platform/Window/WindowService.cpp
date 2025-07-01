@@ -64,12 +64,12 @@ namespace Ocean {
     // Mouse Callbacks
 
     /**
-     * @brief 
+     * @brief A callback for GLFW to call when a Window receives a mouse button action.
      * 
-     * @param window 
-     * @param button 
-     * @param action 
-     * @param mods 
+     * @param window The window ptr that received the action.
+     * @param button The mouse button that was pressed or released.
+     * @param action GLFW_PRESS, GLFW_RELEASE, or GLFW_REPEAT.
+     * @param mods A bit field describing which modifier keys were held.
      */
     static void MouseButtonCallback(GLFWwindow* window, i32 button, i32 action, OC_UNUSED i32 mods) {
         const Window::WindowData* ref = static_cast<Window::WindowData*>(glfwGetWindowUserPointer(window));
@@ -83,11 +83,11 @@ namespace Ocean {
     }
 
     /**
-     * @brief 
+     * @brief A callback for GLFW to call when a Window receives a mouse position update.
      * 
-     * @param window 
-     * @param xpos 
-     * @param ypos 
+     * @param window The window ptr that received the update.
+     * @param xpos The new x position of the mouse.
+     * @param ypos The new y position of the mouse.
      */
     static void MousePositionCallback(GLFWwindow* window, f64 xpos, f64 ypos) {
         const Window::WindowData* ref = static_cast<Window::WindowData*>(glfwGetWindowUserPointer(window));
@@ -96,11 +96,11 @@ namespace Ocean {
     }
 
     /**
-     * @brief 
+     * @brief A callback for GLFW to call when a Window receives a mouse scroll update.
      * 
-     * @param window 
-     * @param xoffset 
-     * @param yoffset 
+     * @param window The window ptr that received the update.
+     * @param xoffset The amount of horizontal scrolling.
+     * @param yoffset The amount of vertical scrolling.
      */
     static void MouseScrollCallback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
         const Window::WindowData* ref = static_cast<Window::WindowData*>(glfwGetWindowUserPointer(window));
@@ -198,7 +198,7 @@ namespace Ocean {
     void WindowService::Init() {
         WindowContext::Init();
 
-        oprints("Window server is %s\n", WindowContext::GetPlatformName());
+        oprints("Running on %s\n", WindowContext::GetPlatformName());
 
         EventService::AddEventCallback<EventCategory::WINDOW>(OC_BIND_EVENT_FN(WindowService::OnEvent));
     }
@@ -215,10 +215,6 @@ namespace Ocean {
             glfwPollEvents();
         else
             glfwWaitEvents();
-    }
-
-    void WindowService::SwapBuffers() {
-        /** @todo This is related to how Vulkan handles buffers separately to GLFW, will have to tell the RendererService to Swap Buffers instead. */
     }
 
     void WindowService::OnEvent(Event& e) {

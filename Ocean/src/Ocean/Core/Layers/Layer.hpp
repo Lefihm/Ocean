@@ -1,6 +1,6 @@
 /**
  * @file Layer.hpp
- * @brief 
+ * @brief A base class for all layers in the application.
  * 
  * @author Evan F.
  * 
@@ -36,10 +36,18 @@ namespace Ocean {
         /** @brief Occurs when the layer is dettached from a LayerStack. */
         inline virtual void OnDetach() { }
 
-        /** @brief Occurs when the layer is updated by the Application. */
+        /**
+         * @brief Occurs when the layer is updated by the Application.
+         * 
+         * @param ts The time since the last update.
+         */
         inline virtual void OnUpdate(OC_UNUSED Timestep ts) { }
 
-        /** @brief Occurs when there is an event submitted to the layer. */
+        /**
+         * @brief Occurs when there is an event submitted to the layer.
+         * 
+         * @param e The event that was submitted.
+         */
         virtual void OnEvent(OC_UNUSED Event& e) { }
 
         /**

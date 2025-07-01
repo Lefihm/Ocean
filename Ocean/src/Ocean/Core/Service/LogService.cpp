@@ -19,7 +19,10 @@ namespace Ocean {
 
 
 
-    LogService::LogService() {
+    LogService::LogService() :
+        StaticService(),
+        m_PrintCallback(nullptr)
+    {
         if (!s_Instance)
             s_Instance = this;
     }

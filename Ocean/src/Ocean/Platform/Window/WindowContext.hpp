@@ -45,15 +45,11 @@ namespace Ocean {
         static void Shutdown();
 
         /**
-         * @brief Get's a PlatformID from the window handler.
-         * 
-         * @return PlatformID
+         * @brief Get's the PlatformID from the window handler.
          */
         static PlatformID GetPlatformID();
         /**
-         * @brief Get the platform name.
-         * 
-         * @return cstring 
+         * @brief Get the platform name as a cstring.
          */
         static cstring GetPlatformName();
 

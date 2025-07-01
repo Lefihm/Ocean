@@ -14,8 +14,16 @@
 
 namespace Ocean {
 
+    /** @brief An event representing a key press. */
     class KeyPressedEvent : public Event {
     public:
+        /**
+         * @brief Constructs a new KeyPressedEvent object.
+         * 
+         * @param id The ID of the window that received the event.
+         * @param key The key code of the pressed key.
+         * @param repeating Whether the key is being held down (repeating) or not.
+         */
         KeyPressedEvent(WindowID id, KeyCode key, b8 repeating = false) :
             Event(id),
             Key(key),
@@ -30,8 +38,15 @@ namespace Ocean {
 
     };  // KeyPressedEvent
 
+    /** @brief An event representing a key release. */
     class KeyReleasedEvent : public Event {
     public:
+        /**
+         * @brief Constructs a new KeyReleasedEvent object.
+         * 
+         * @param id The ID of the window that received the event.
+         * @param key The key code of the released key.
+         */
         KeyReleasedEvent(WindowID id, KeyCode key) :
             Event(id),
             Key(key)
@@ -44,8 +59,14 @@ namespace Ocean {
 
     };  // KeyReleasedEvent
 
+    /** @brief An event representing a key being typed. */
     class KeyTypedEvent : public Event {
     public:
+        /**
+         * @brief Constructs a new KeyTypedEvent object.
+         * 
+         * @param id The ID of the window that received the event.
+         */
         KeyTypedEvent(WindowID id) :
             Event(id)
         { }

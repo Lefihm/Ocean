@@ -14,6 +14,11 @@ namespace Ocean {
         LayerStack() : m_Layers(), m_InsertIndex(0) { }
         ~LayerStack();
 
+        /** @brief Attaches all layers in the layerstack. */
+        void AttachLayers();
+        /** @brief Detaches all layers in the layerstack. */
+        void DetachLayers();
+
         /**
          * @brief Pushes a Layer onto m_Layers.
          * 

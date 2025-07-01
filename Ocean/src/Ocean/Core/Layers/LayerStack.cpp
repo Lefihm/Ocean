@@ -7,9 +7,19 @@ namespace Ocean {
 
         LayerStack::~LayerStack() {
             for (Layer* layer : this->m_Layers) {
-                layer->OnDetach();
-
                 delete layer;
+            }
+        }
+
+        void LayerStack::AttachLayers() {
+            for (Layer* layer : this->m_Layers) {
+                layer->OnAttach();
+            }
+        }
+
+        void LayerStack::DetachLayers() {
+            for (Layer* layer : this->m_Layers) {
+                layer->OnDetach();
             }
         }
 

@@ -8,6 +8,7 @@
  */
 #pragma once
 
+#include "Ocean/Core/Macros.hpp"
 #include "Ocean/Types/Bool.hpp"
 #include "Ocean/Types/Strings.hpp"
 
@@ -22,6 +23,11 @@
 
 namespace Ocean {
 
+    /**
+     * @brief A unique identifier for a window.
+     * 
+     * This is used to identify windows within the Ocean Engine.
+     */
     using WindowID = u16;
 
     /**
@@ -49,11 +55,6 @@ namespace Ocean {
          */
         static void PollEvents();
 
-        /**
-         * @brief Swaps the buffers of each Window.
-         */
-        static void SwapBuffers();
-
         void OnEvent(Event& e);
 
         /**
@@ -70,17 +71,41 @@ namespace Ocean {
          * @param x The width of the Window.
          * @param y The height of the Window.
          * @param name The name of the Window.
+         * 
          * @return b8 True if successful, False otherwise.
          */
         static b8 MakeWindow(u32 width, u32 height, cstring name);
+        /**
+         * @brief Destroys a Window by name.
+         * 
+         * @param name The name of the Window to destroy.
+         * 
+         * @return b8 True if successful, False otherwise.
+         */
         static b8 DestroyWindow(cstring name);
 
     private:
+        OC_NO_COPY(WindowService);
+
+        /**
+         * @brief Handles the WindowCloseEvent.
+         * 
+         * @param e The WindowCloseEvent to handle.
+         * 
+         * @return b8 True if the event was handled, False otherwise.
+         */
         b8 WindowClosed(WindowCloseEvent& e);
 
+        /**
+         * @brief Creates a unique WindowID from a window name.
+         * 
+         * @param name The name of the window.
+         * @return WindowID The unique identifier for the window.
+         */
         static WindowID MakeWindowID(cstring name);
 
     private:
+        /** @brief The instance of the WindowService, makes sure there is only one instance running. */
         inline static WindowService* s_Instance = nullptr;
 
         /**

@@ -11,7 +11,7 @@ namespace Ocean {
 
     #define FixedTimestep 0.02f
 
-    Application::Application(const ApplicationConfig& config) :
+    Application::Application(OC_UNUSED const ApplicationConfig& config) :
         m_LayerStack(),
         m_LastFrameTime(0.0f),
         m_Accumulator(0.0f),
@@ -48,18 +48,18 @@ namespace Ocean {
         oprint(CONSOLE_TEXT_GREEN("|- Application Push Layer Call\n"));
 
         this->m_LayerStack.PushLayer(layer);
-        layer->OnAttach();
     }
 
     void Application::PushOverlay(Layer* layer) {
         oprint(CONSOLE_TEXT_GREEN("|- Application Push Overlay Call\n"));
 
         this->m_LayerStack.PushOverlay(layer);
-        layer->OnAttach();
     }
 
     void Application::Run() {
         oprint(CONSOLE_TEXT_GREEN("|- Application Run Call\n"));
+
+        this->m_LayerStack.AttachLayers();
 
         this->m_Running = true;
 
@@ -103,20 +103,19 @@ namespace Ocean {
                 // TODO: Interpolation
                 Render(f32());
             }
-            FrameEnd();
 
-            // this->m_Window->OnUpdate();
+            FrameEnd();
 
             frameCount++;
         }
+
+        this->m_LayerStack.DetachLayers();
     }
 
     void Application::FixedUpdate(Timestep delta) {
         // oprint(CONSOLE_TEXT_GREEN("\t|- Application FixedUpdate Call\n"));
     }
     void Application::VariableUpdate(Timestep delta) {
-        // oprint(CONSOLE_TEXT_GREEN("\t|- Application VariableUpdate Call\n"));
-
         for (Layer* layer : this->m_LayerStack)
             layer->OnUpdate(delta);
     }

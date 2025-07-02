@@ -14,6 +14,8 @@
 
 #include "Ocean/Core/Macros.hpp"
 
+#include "Ocean/Platform/Events/Event.hpp"
+
 namespace Ocean {
 
     /**
@@ -38,7 +40,7 @@ namespace Ocean {
         inline virtual void OnUpdate(OC_UNUSED Timestep ts) { }
 
         /** @brief Occurs when there is an event submitted to the layer. */
-        // virtual void OnEvent(Event& e) { }
+        virtual void OnEvent(OC_UNUSED Event& e) { }
 
         /**
          * @brief Returns true if the layer is enabled, false otherwise.

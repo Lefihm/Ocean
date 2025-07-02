@@ -22,8 +22,8 @@ namespace Ocean {
      */
     enum ServicePriority : u8 {
         IMMEDIATE = 0,
-        INITIAL   = 1,
-        DONT_CARE = 2
+        INITIAL   = 5,
+        DONT_CARE = 10
 
     };
 

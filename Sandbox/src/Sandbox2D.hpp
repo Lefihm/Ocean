@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Ocean/Core/Layers/Layer.hpp>
+#include <Ocean/Platform/Events/Event.hpp>
 
 class Sandbox2D : public Ocean::Layer {
 public:
@@ -12,7 +13,7 @@ public:
 
 	virtual void OnUpdate(Timestep ts) override;
 
-	// virtual void OnEvent(Ocean::Event& e) override;
+	virtual void OnEvent(Ocean::Event& e) override;
 
 private:
 

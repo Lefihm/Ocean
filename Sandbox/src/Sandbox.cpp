@@ -31,7 +31,7 @@ Sandbox::Sandbox(const Ocean::ApplicationConfig& config) : Ocean::Application(co
 
     Ocean::WindowService::MakeWindow(800, 600, "Sandbox");
 
-    // PushLayer(new Sandbox2D);
+    PushLayer(new Sandbox2D);
 }
 
 Sandbox::~Sandbox() {

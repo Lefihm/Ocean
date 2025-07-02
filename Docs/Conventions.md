@@ -5,7 +5,7 @@
 ### Open Methods
 
 An "open method" would be considered a function that is not within the scope of a class or object. So either static helper functions or general helper functions that are used.
-Open methods should follow the naming convention of a lowercase 'o' as the prefix to the name.
+Open methods should follow the naming convention of a lowercase 'o' as the prefix to the name, denoting that the function is from Ocean Engine.
 
 **For example:**
 
@@ -76,9 +76,9 @@ Documentation will be Doxygen compliant, using `/** */` (often refered to as Jav
  * @param p1 Parameter description
  * @param p2 Parameter description
  *
- * @return Return description
+ * @return u32 Return description
  */
-void oFoo(i32 p1, i32 p2) { ... }
+u32 oFoo(i32 p1, i32 p2) { ... }
 ```
 
 ## Example Code

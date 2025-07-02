@@ -106,11 +106,11 @@ namespace Ocean {
 
         b8 IsInCategory(EventCategoryFlags category) const { return GetCategoryFlags() & category; }
 
-    #ifdef OC_DEBUG
+    // #ifdef OC_DEBUG
 
         virtual cstring GetEventName() const { return "Base Event"; }
 
-    #endif
+    // #endif
 
         #define AssignEventType(type)           static EventType GetStaticType() { return type; } \
                                                 virtual EventType GetEventType() const override { return GetStaticType(); } \

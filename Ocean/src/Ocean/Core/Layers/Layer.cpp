@@ -8,7 +8,7 @@ namespace Ocean {
 
 #else
 
-    Layer::Layer(OC_UNUSED const string& name) : m_Enabled(true) { }
+    Layer::Layer(OC_UNUSED const String& name) : m_Enabled(true) { }
 
 #endif
 

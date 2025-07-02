@@ -109,7 +109,6 @@ target_link_libraries(
     PRIVATE flecs::flecs_static
     PRIVATE glslang
     PRIVATE Vulkan::Vulkan
-    PRIVATE ${OPENGL_LIBRARIES}
 
     PUBLIC glm::glm-header-only
 )

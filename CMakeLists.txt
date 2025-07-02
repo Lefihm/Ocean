@@ -6,7 +6,7 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/.cmake")
 include(globbert)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -17,6 +17,8 @@ option(CMAKE_VERBOSE_MAKEFILE "Use CMake verbose make file." ON)
 
 option(Ocean_BUILD_DLL "Build Ocean as a dynamic library." ON)
 option(Ocean_BUILD_TESTS "Build Ocean tests." Ocean_INTERNAL_BUILD_TESTS)
+
+option(Ocean_GENERATE_DOCS "Generate documentation." ON)
 
 if (NOT DEFINED Ocean_INTERNAL_BUILD_TESTS AND Ocean_MAIN_PROJECT)
     set(Ocean_BUILD_TESTS ON)
@@ -244,6 +246,37 @@ string(TIMESTAMP time "%M:%S")
 message(STATUS "Sandbox Starting (${time})...")
 message(STATUS)
 add_subdirectory(Sandbox)
+
+if (Ocean_GENERATE_DOCS AND CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
+
+    find_package(Doxygen COMPONENTS dot)
+
+    if (DOXYGEN_FOUND)
+
+        # Set input and output files
+        set(Ocean_DOGYGEN_IN "${PROJECT_SOURCE_DIR}/Docs/Doxyfile.in")
+        set(Ocean_DOGYGEN_OUT "${PROJECT_BINARY_DIR}/Doxyfile")
+
+        # Request to configure the file
+        configure_file(${Ocean_DOGYGEN_IN} ${Ocean_DOGYGEN_OUT} @ONLY)
+        message(STATUS "Doxygen build started for ${PROJECT_NAME}.")
+
+        add_custom_target(
+            "Documentation"
+
+            COMMAND ${DOXYGEN_EXECUTABLE} ${Ocean_DOGYGEN_OUT}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+            COMMENT "Generating documentation with Doxygen"
+            VERBATIM
+        )
+
+    else (DOXYGEN_FOUND)
+
+        message(STATUS "Doxygen not found. Documentation generation will not be performed.")
+
+    endif (DOXYGEN_FOUND)
+
+endif (Ocean_GENERATE_DOCS AND CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
 
 string(TIMESTAMP time "%H:%M:%S")
 message(STATUS "All required steps Completed, EOF for ${PROJECT_NAME} at time: ${time}\n")

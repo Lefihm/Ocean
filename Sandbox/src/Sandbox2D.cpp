@@ -10,6 +10,11 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D")
 void Sandbox2D::OnAttach() {
     oprint("Sandbox Layer Attach: {%s}\n", this->GetName().c_str());
 
+    /**
+    * @todo For some reason the EventService instance is resetting to 0x0000...
+    *       need to investigate as to why because there is no reason it should.
+    */
+
     // Ocean::EventService::AddEventCallback<Ocean::EventCategory::KEYBOARD>(OC_BIND_EVENT_FN(Sandbox2D::OnEvent));
 }
 
